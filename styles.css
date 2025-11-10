@@ -1,0 +1,18 @@
+body {
+  font-family: 'Inter', sans-serif;
+  line-height: 1.7;
+}
+
+h1, h2, h3 {
+  color: #004aad;
+}
+
+a {
+  color: #0066cc;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
