@@ -5,11 +5,11 @@
       xmlns:dc="http://purl.org/dc/elements/1.1/" 
       version="2.0">
 <channel>
-<title>Math &amp; AI Notes by Naif</title>
+<title>Naif Mersal</title>
 <link>https://naifmersal.github.io/posts/</link>
 <atom:link href="https://naifmersal.github.io/posts/index.xml" rel="self" type="application/rss+xml"/>
 <description>Mathematics, AI, and optimization; notes, experiments, and projects</description>
 <generator>quarto-1.8.25</generator>
-<lastBuildDate>Sun, 09 Nov 2025 21:45:27 GMT</lastBuildDate>
+<lastBuildDate>Thu, 13 Nov 2025 12:33:15 GMT</lastBuildDate>
 </channel>
 </rss>

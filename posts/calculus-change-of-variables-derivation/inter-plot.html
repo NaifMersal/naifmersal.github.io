@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transformation Visualization</title>
+    <style>
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 20px;
+            width: 800px;
+            height: 600px;
+            margin: 0 auto;
+            font-family: Arial, sans-serif;
+        }
+        .plot {
+            border: 1px solid #ddd;
+            position: relative;
+        }
+        .plot-title {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-weight: bold;
+        }
+        .controls {
+            grid-column: 1 / span 2;
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            margin: 0 10px;
+        }
+        .control-group label {
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        .connection-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="plot" id="uv-plane">
+            <div class="plot-title">(u,v) plane - S</div>
+        </div>
+        <div class="plot" id="xy-plane">
+            <div class="plot-title">(x,y) plane - T(S)</div>
+        </div>
+        <div class="plot" id="zoom-r">
+            <div class="plot-title">Zoom R</div>
+        </div>
+        <div class="plot" id="zoom-t">
+            <div class="plot-title">Zoom T(R)</div>
+        </div>
+        <div class="controls">
+            <div class="control-group">
+                <label for="u0">u₀</label>
+                <input type="range" id="u0" min="-0.5" max="0.5" step="0.01" value="0.1">
+                <span id="u0-value">0.1</span>
+            </div>
+            <div class="control-group">
+                <label for="v0">v₀</label>
+                <input type="range" id="v0" min="-0.5" max="0.3" step="0.01" value="0.1">
+                <span id="v0-value">0.1</span>
+            </div>
+            <div class="control-group">
+                <label for="du">Δu</label>
+                <input type="range" id="du" min="0.0" max="0.5" step="0.01" value="0.1">
+                <span id="du-value">0.1</span>
+            </div>
+            <div class="control-group">
+                <label for="dv">Δv</label>
+                <input type="range" id="dv" min="0.0" max="0.5" step="0.01" value="0.1">
+                <span id="dv-value">0.1</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script>
+        // Transformation function
+        function T(u, v) {
+            return {
+                x: 1.2 * u + 0.4 * v * v - 0.1 * u * v,
+                y: 0.5 * v + 0.2 * u * u - 0.05 * v * v * v
+            };
+        }
+
+        // Jacobian matrix
+        function jacobian(u, v) {
+            const dx_du = 1.2 - 0.1 * v;
+            const dx_dv = 0.8 * v - 0.1 * u;
+            const dy_du = 0.4 * u;
+            const dy_dv = 0.5 - 0.15 * v * v;
+            return [[dx_du, dx_dv], [dy_du, dy_dv]];
+        }
+
+        // Parameters
+        let u0 = 0.1;
+        let v0 = 0.1;
+        let du = 0.1;
+        let dv = 0.1;
+        let showGrid = false;
+        
+        // **MODIFICATION 1: Add epsilon for zero-checking**
+        const epsilon = 1e-9;
+
+        // Set up SVG dimensions and scales
+        const plotWidth = 400;
+        const plotHeight = 300;
+        const margin = { top: 30, right: 10, bottom: 10, left: 10 };
+
+        // Create SVG containers
+        const svgUV = d3.select("#uv-plane").append("svg")
+            .attr("width", plotWidth)
+            .attr("height", plotHeight);
+            
+        const svgXY = d3.select("#xy-plane").append("svg")
+            .attr("width", plotWidth)
+            .attr("height", plotHeight);
+            
+        const svgZoomR = d3.select("#zoom-r").append("svg")
+            .attr("width", plotWidth)
+            .attr("height", plotHeight);
+            
+        const svgZoomT = d3.select("#zoom-t").append("svg")
+            .attr("width", plotWidth)
+            .attr("height", plotHeight);
+
+        // Create connection lines container
+        const connectionLines = d3.select("body").append("svg")
+            .attr("class", "connection-lines")
+            .style("position", "absolute")
+            .style("top", "0")
+            .style("left", "0")
+            .style("width", "100%")
+            .style("height", "100%")
+            .style("pointer-events", "none")
+            .style("z-index", "10");
+
+        // Scales for the main plots
+        const scaleUV = d3.scaleLinear()
+            .domain([-3, 3])
+            .range([margin.left, plotWidth - margin.right]);
+            
+        const scaleXY = d3.scaleLinear()
+            .domain([-3, 3])
+            .range([margin.left, plotWidth - margin.right]);
+
+        // Function to update the visualization
+        function updateVisualization() {
+            // **MODIFICATION 2: Add zero-check flags**
+            const isDuZero = du < epsilon;
+            const isDvZero = dv < epsilon;
+            const isPoint = isDuZero && isDvZero;
+            
+            // Clear previous drawings
+            svgUV.selectAll("*").remove();
+            svgXY.selectAll("*").remove();
+            svgZoomR.selectAll("*").remove();
+            svgZoomT.selectAll("*").remove();
+            connectionLines.selectAll("*").remove();
+
+            // ---- (u,v) plane ----
+            // Draw blob shape
+            const t = d3.range(0, 2 * Math.PI, 0.05);
+            const blobData = t.map(angle => {
+                const r = 1.5 + 0.3 * Math.sin(3 * angle);
+                return {
+                    x: r * Math.cos(angle),
+                    y: r * Math.sin(angle)
+                };
+            });
+            
+            svgUV.append("path")
+                .datum(blobData)
+                .attr("d", d3.line()
+                    .x(d => scaleUV(d.x))
+                    .y(d => scaleUV(d.y)) // Note: Using same scale for y, as in original
+                )
+                .attr("fill", "#d0e1f9")
+                .attr("stroke", "black")
+                .attr("stroke-width", 1.2)
+                .attr("fill-rule", "evenodd");
+
+            // **MODIFICATION 3: Draw R as rect, line, or point**
+            if (isPoint) {
+                // Draw as a point
+                svgUV.append("circle")
+                    .attr("cx", scaleUV(u0))
+                    .attr("cy", scaleUV(v0))
+                    .attr("r", 2)
+                    .attr("fill", "blue")
+                    .attr("stroke", "blue")
+                    // .attr("stroke-width", 1.2);
+            } else if (isDuZero) {
+                // Draw as vertical line
+                svgUV.append("line")
+                    .attr("x1", scaleUV(u0))
+                    .attr("y1", scaleUV(v0))
+                    .attr("x2", scaleUV(u0))
+                    .attr("y2", scaleUV(v0 + dv))
+                    .attr("stroke", "blue")
+                    .attr("stroke-width", 1.5)
+                    .attr("stroke-dasharray", "5,5");
+            } else if (isDvZero) {
+                // Draw as horizontal line
+                svgUV.append("line")
+                    .attr("x1", scaleUV(u0))
+                    .attr("y1", scaleUV(v0))
+                    .attr("x2", scaleUV(u0 + du))
+                    .attr("y2", scaleUV(v0))
+                    .attr("stroke", "blue")
+                    .attr("stroke-width", 1.5)
+                    .attr("stroke-dasharray", "5,5");
+            } else {
+                // Draw as rectangle
+                svgUV.append("rect")
+                    .attr("x", scaleUV(u0))
+                    .attr("y", scaleUV(v0))
+                    .attr("width", scaleUV(u0 + du) - scaleUV(u0))
+                    .attr("height", scaleUV(v0 + dv) - scaleUV(v0))
+                    .attr("fill", "none")
+                    .attr("stroke", "blue")
+                    .attr("stroke-width", 1.5)
+                    .attr("stroke-dasharray", "5,5")
+                    .attr("opacity", 0.8);
+            }
+
+            // Add title
+            svgUV.append("text")
+                .attr("x", plotWidth / 2)
+                .attr("y", 20)
+                .attr("text-anchor", "middle")
+                .attr("font-weight", "bold")
+                .text("S");
+
+            // ---- Zoom R ----
+            // These will be used for connection lines
+            let rect_x, rect_y, display_width, display_height;
+
+            if (isPoint) {
+                // **MODIFICATION 4a: Draw point if R is a point**
+                rect_x = plotWidth / 2;
+                rect_y = plotHeight / 2;
+                display_width = 0;
+                display_height = 0;
+
+                svgZoomR.append("circle")
+                    .attr("cx", rect_x)
+                    .attr("cy", rect_y)
+                    .attr("r", 2)
+                    .attr("fill", "blue");
+                
+                svgZoomR.append("text")
+                    .attr("x", rect_x)
+                    .attr("y", rect_y - 10)
+                    .attr("text-anchor", "middle")
+                    .attr("font-size", "12px")
+                    .attr("fill", "blue")
+                    .text("R = (u₀,v₀)");
+
+            } else {
+                // **MODIFICATION 4b: Draw rect/line if R is rect/line**
+                const zoomRAvailWidth = plotWidth - margin.left - margin.right;
+                const zoomRAvailHeight = plotHeight - margin.top - margin.bottom;
+                const max_pixel_width = zoomRAvailWidth * 0.8; // Use 80% of space
+                const max_pixel_height = zoomRAvailHeight * 0.8;
+                const min_pixel_thickness = 2.0; // Min size for a "line"
+                
+                if (isDvZero) {
+                    display_width = max_pixel_width;
+                    display_height = min_pixel_thickness;
+                } else if (isDuZero) {
+                    display_width = min_pixel_thickness;
+                    display_height = max_pixel_height;
+                } else {
+                    const aspect_ratio = (du / dv);
+                    const container_aspect_ratio = max_pixel_width / max_pixel_height;
+                    
+                    if (aspect_ratio > container_aspect_ratio) {
+                        display_width = max_pixel_width;
+                        display_height = display_width / aspect_ratio;
+                    } else {
+                        display_height = max_pixel_height;
+                        display_width = display_height * aspect_ratio;
+                    }
+                }
+                
+                rect_x = (plotWidth / 2) - (display_width / 2);
+                rect_y = (plotHeight / 2) - (display_height / 2);
+                    
+                // Draw centered rectangle
+                svgZoomR.append("rect")
+                    .attr("x", rect_x)
+                    .attr("y", rect_y)
+                    .attr("width", display_width)
+                    .attr("height", display_height)
+                    .attr("fill", "#d0e1f9")
+                    .attr("stroke", "blue")
+                    .attr("stroke-width", 1.0)
+                    .attr("opacity", 0.8);
+
+                // Add labels relative to the new centered rect
+                svgZoomR.append("text")
+                    .attr("x", rect_x + display_width / 2)
+                    .attr("y", rect_y + display_height / 2)
+                    .attr("text-anchor", "middle")
+                    .attr("dominant-baseline", "middle")
+                    .attr("font-weight", "bold")
+                    .text("R");
+                    
+                svgZoomR.append("text")
+                    .attr("x", rect_x + display_width / 2)
+                    .attr("y", rect_y - 15) // 15px above rect
+                    .attr("text-anchor", "middle")
+                    .attr("dominant-baseline", "hanging")
+                    .attr("font-size", "12px")
+                    .attr("fill", "blue")
+                    .text(isDuZero ? "" : "Δu"); // Don't show if zero
+                    
+                svgZoomR.append("text")
+                    .attr("x", rect_x - 5) // 5px left of rect
+                    .attr("y", rect_y + display_height / 2)
+                    .attr("text-anchor", "end")
+                    .attr("dominant-baseline", "middle")
+                    .attr("font-size", "12px")
+                    .attr("fill", "blue")
+                    .text(isDvZero ? "" : "Δv"); // Don't show if zero
+                    
+                svgZoomR.append("text")
+                    .attr("x", rect_x -30)
+                    .attr("y", rect_y - 15) // 15px above top-left corner
+                    .attr("text-anchor", "start")
+                    .attr("dominant-baseline", "hanging")
+                    .attr("font-size", "12px")
+                    .attr("fill", "blue")
+                    .text("(u₀,v₀)");
+            }
+
+            // ---- (x,y) plane ----
+            // Draw transformed blob shape
+            const blobData2 = t.map(angle => {
+                const r = 1.5 + 0.3 * Math.sin(3 * angle + 0.8);
+                const point = {
+                    x: 1.1 * r * Math.cos(angle + 0.3),
+                    y: 0.8 * r * Math.sin(angle)
+                };
+                return T(point.x, point.y);
+            });
+            
+            svgXY.append("path")
+                .datum(blobData2)
+                .attr("d", d3.line()
+                    .x(d => scaleXY(d.x))
+                    .y(d => scaleXY(d.y)) // Note: Using same scale for y
+                )
+                .attr("fill", "#fddbc7")
+                .attr("stroke", "black")
+                .attr("stroke-width", 1.2)
+                .attr("fill-rule", "evenodd");
+
+            // Draw transformed rectangle T(R)
+            const nu = 25, nv = 25;
+            // **MODIFICATION 5: Robust range generation**
+            const uVals = d3.range(nu + 1).map(i => u0 + (i / nu) * du);
+            const vVals = d3.range(nv + 1).map(i => v0 + (i / nv) * dv);
+            
+            // Bottom edge
+            const bottom = uVals.map(u => T(u, v0));
+            // Top edge
+            const top = [...uVals].reverse().map(u => T(u, v0 + dv));
+            // Right edge
+            const right = vVals.map(v => T(u0 + du, v));
+            // Left edge
+            const left = [...vVals].reverse().map(v => T(u0, v));
+            
+            // Combine all edges
+            const tRData = [...bottom, ...right, ...top, ...left];
+            
+            // **MODIFICATION 6: Draw T(R) as path, line, or point**
+            if (isPoint) {
+                const origin = T(u0, v0);
+                svgXY.append("circle")
+                    .attr("cx", scaleXY(origin.x))
+                    .attr("cy", scaleXY(origin.y))
+                    .attr("r", 2)
+                    .attr("fill", "darkred");
+            } else {
+                svgXY.append("path")
+                    .datum(tRData)
+                    .attr("d", d3.line()
+                        .x(d => scaleXY(d.x))
+                        .y(d => scaleXY(d.y)) // Note: Using same scale for y
+                    )
+                    // **MODIFICATION 7: No fill if it's just a line**
+                    .attr("fill", (isDuZero || isDvZero) ? "none" : "#f4a582")
+                    .attr("stroke", "darkred")
+                    .attr("stroke-width", 1.2)
+                    .attr("opacity", 0.9);
+            }
+
+            // Add title
+            svgXY.append("text")
+                .attr("x", plotWidth / 2)
+                .attr("y", 20)
+                .attr("text-anchor", "middle")
+                .attr("font-weight", "bold")
+                .text("T(S)");
+
+            // ---- Zoom T(R) ----
+            // Calculate linear approximation using Jacobian
+            const J = jacobian(u0, v0);
+            const origin = T(u0, v0);
+            
+            // Corners in UV space
+            const cornersUV = [
+                [0, 0], [du, 0], [du, dv], [0, dv]
+            ];
+            
+            // Transform corners using Jacobian
+            const mappedLinearCorners = cornersUV.map(corner => {
+                const [du_val, dv_val] = corner;
+                return {
+                    x: origin.x + J[0][0] * du_val + J[0][1] * dv_val,
+                    y: origin.y + J[1][0] * du_val + J[1][1] * dv_val
+                };
+            });
+            
+            // Close the polygon
+            mappedLinearCorners.push(mappedLinearCorners[0]);
+            
+            // Determine bounds for zoom T
+            // This logic works fine even for points/lines, as min/max will be close
+            const allX = [...tRData.map(d => d.x), ...mappedLinearCorners.map(d => d.x)];
+            const allY = [...tRData.map(d => d.y), ...mappedLinearCorners.map(d => d.y)];
+            
+            const minX = Math.min(...allX) - 0.05;
+            const maxX = Math.max(...allX) + 0.05;
+            const minY = Math.min(...allY) - 0.05;
+            const maxY = Math.max(...allY) + 0.05;
+            
+            // Set up zoom scale for T(R)
+            const scaleZoomT = d3.scaleLinear()
+                .domain([minX, maxX])
+                .range([margin.left, plotWidth - margin.right]);
+                
+            const scaleZoomTY = d3.scaleLinear()
+                .domain([minY, maxY])
+                .range([margin.top, plotHeight - margin.bottom]); // Use height range
+
+            // **MODIFICATION 8: Draw T(R) as path, line, or point in Zoom**
+            if (isPoint) {
+                svgZoomT.append("circle")
+                    .attr("cx", scaleZoomT(origin.x))
+                    .attr("cy", scaleZoomTY(origin.y))
+                    .attr("r", 2)
+                    .attr("fill", "darkred");
+
+                svgZoomT.append("text")
+                    .attr("x", scaleZoomT(origin.x))
+                    .attr("y", scaleZoomTY(origin.y) - 10)
+                    .attr("text-anchor", "middle")
+                    .attr("font-size", "12px")
+                    .attr("fill", "darkred")
+                    .text("T(R) = T(u₀,v₀)");
+            } else {
+                // Draw transformed region T(R)
+                svgZoomT.append("path")
+                    .datum([...tRData, tRData[0]]) // Close the polygon
+                    .attr("d", d3.line()
+                        .x(d => scaleZoomT(d.x))
+                        .y(d => scaleZoomTY(d.y))
+                    )
+                    // **MODIFICATION 9: No fill if it's just a line**
+                    .attr("fill", (isDuZero || isDvZero) ? "none" : "#fddbc7")
+                    .attr("stroke", "orange")
+                    .attr("stroke-width", 1.5)
+                    .attr("opacity", 0.8);
+
+                // Draw linear approximation
+                svgZoomT.append("path")
+                    .datum(mappedLinearCorners)
+                    .attr("d", d3.line()
+                        .x(d => scaleZoomT(d.x))
+                        .y(d => scaleZoomTY(d.y))
+                    )
+                    .attr("fill", "none")
+                    .attr("stroke", "red")
+                    .attr("stroke-width", 1.5)
+                    .attr("stroke-dasharray", "5,5");
+
+                // Add labels for linear approximation corners
+                const labels = [
+                    { text: "T(u₀,v₀)", anchor: "end", baseline: "hanging" },
+                    { text: "T(u₀+Δu, v₀)", anchor: "start", baseline: "hanging" },
+                    { text: "T(u₀+Δu, v₀+Δv)", anchor: "start", baseline: "baseline" },
+                    { text: "T(u₀, v₀+Δv)", anchor: "end", baseline: "baseline" }
+                ];
+                
+                cornersUV.slice(0, 4).forEach((corner, i) => {
+                    const point = mappedLinearCorners[i];
+                    svgZoomT.append("text")
+                        .attr("x", scaleZoomT(point.x))
+                        .attr("y", scaleZoomTY(point.y))
+                        .attr("text-anchor", labels[i].anchor)
+                        .attr("dominant-baseline", labels[i].baseline)
+                        .attr("font-size", "12px")
+                        .attr("fill", "red")
+                        .text(labels[i].text);
+                });
+            }
+
+            // ---- Connection lines ----
+            // Get plot positions in the overall layout
+            const uvPlotRect = document.getElementById("uv-plane").getBoundingClientRect();
+            const zoomRPlotRect = document.getElementById("zoom-r").getBoundingClientRect();
+            const xyPlotRect = document.getElementById("xy-plane").getBoundingClientRect();
+            const zoomTPlotRect = document.getElementById("zoom-t").getBoundingClientRect();
+
+            // **MODIFICATION 10: Connection lines for point or rect/line**
+            if (isPoint) {
+                // Connect the single points
+                const uvScreen = { x: scaleUV(u0), y: scaleUV(v0) };
+                const zoomRScreen = { x: rect_x, y: rect_y }; // From Zoom R calc
+                const xyScreen = { x: scaleXY(origin.x), y: scaleXY(origin.y) };
+                const zoomTScreen = { x: scaleZoomT(origin.x), y: scaleZoomTY(origin.y) };
+
+                connectionLines.append("line")
+                    .attr("x1", uvPlotRect.left + uvScreen.x)
+                    .attr("y1", uvPlotRect.top + uvScreen.y)
+                    .attr("x2", zoomRPlotRect.left + zoomRScreen.x)
+                    .attr("y2", zoomRPlotRect.top + zoomRScreen.y)
+                    .attr("stroke", "blue")
+                    .attr("stroke-width", 1.2)
+                    .attr("stroke-dasharray", "5,5")
+                    .attr("opacity", 0.8);
+                
+                connectionLines.append("line")
+                    .attr("x1", xyPlotRect.left + xyScreen.x)
+                    .attr("y1", xyPlotRect.top + xyScreen.y)
+                    .attr("x2", zoomTPlotRect.left + zoomTScreen.x)
+                    .attr("y2", zoomTPlotRect.top + zoomTScreen.y)
+                    .attr("stroke", "red")
+                    .attr("stroke-width", 1.2)
+                    .attr("stroke-dasharray", "5,5")
+                    .attr("opacity", 0.8);
+
+            } else {
+                // Original logic for connecting corners
+                const p_uv_tl = { x: u0, y: v0 }; // Top-left
+                const p_uv_tr = { x: u0 + du, y: v0 }; // Top-right
+                const p_xy_tl = T(u0, v0); // Transformed Top-left
+                const p_xy_tr = T(u0 + du, v0); // Transformed Top-right
+                
+                // Get positions in screen coordinates
+                const uvScreenTL = { x: scaleUV(p_uv_tl.x), y: scaleUV(p_uv_tl.y) };
+                const uvScreenTR = { x: scaleUV(p_uv_tr.x), y: scaleUV(p_uv_tr.y) };
+                
+                // Map to centered rect's top corners
+                const zoomRScreenTL = { x: rect_x, y: rect_y };
+                const zoomRScreenTR = { x: rect_x + display_width, y: rect_y };
+                
+                const xyScreenTL = { x: scaleXY(p_xy_tl.x), y: scaleXY(p_xy_tl.y) };
+                const xyScreenTR = { x: scaleXY(p_xy_tr.x), y: scaleXY(p_xy_tr.y) };
+                
+                const zoomTScreenTL = { x: scaleZoomT(p_xy_tl.x), y: scaleZoomTY(p_xy_tl.y) };
+                const zoomTScreenTR = { x: scaleZoomT(p_xy_tr.x), y: scaleZoomTY(p_xy_tr.y) };
+                
+                // Draw connection lines between UV and Zoom R
+                connectionLines.append("line")
+                    .attr("x1", uvPlotRect.left + uvScreenTL.x)
+                    .attr("y1", uvPlotRect.top + uvScreenTL.y)
+                    .attr("x2", zoomRPlotRect.left + zoomRScreenTL.x)
+                    .attr("y2", zoomRPlotRect.top + zoomRScreenTL.y)
+                    .attr("stroke", "blue")
+                    .attr("stroke-width", 1.2)
+                    .attr("stroke-dasharray", "5,5")
+                    .attr("opacity", 0.8);
+                    
+                connectionLines.append("line")
+                    .attr("x1", uvPlotRect.left + uvScreenTR.x)
+                    .attr("y1", uvPlotRect.top + uvScreenTR.y)
+                    .attr("x2", zoomRPlotRect.left + zoomRScreenTR.x)
+                    .attr("y2", zoomRPlotRect.top + zoomRScreenTR.y)
+                    .attr("stroke", "blue")
+                    .attr("stroke-width", 1.2)
+                    .attr("stroke-dasharray", "5,5")
+                    .attr("opacity", 0.8);
+                
+                // Draw connection lines between XY and Zoom T
+                connectionLines.append("line")
+                    .attr("x1", xyPlotRect.left + xyScreenTL.x)
+                    .attr("y1", xyPlotRect.top + xyScreenTL.y)
+                    .attr("x2", zoomTPlotRect.left + zoomTScreenTL.x)
+                    .attr("y2", zoomTPlotRect.top + zoomTScreenTL.y)
+                    .attr("stroke", "red")
+                    .attr("stroke-width", 1.2)
+                    .attr("stroke-dasharray", "5,5")
+                    .attr("opacity", 0.8);
+                    
+                connectionLines.append("line")
+                    .attr("x1", xyPlotRect.left + xyScreenTR.x)
+                    .attr("y1", xyPlotRect.top + xyScreenTR.y)
+                    .attr("x2", zoomTPlotRect.left + zoomTScreenTR.x)
+                    .attr("y2", zoomTPlotRect.top + zoomTScreenTR.y)
+                    .attr("stroke", "red")
+                    .attr("stroke-width", 1.2)
+                    .attr("stroke-dasharray", "5,5")
+                    .attr("opacity", 0.8);
+            }
+        }
+
+        // Initialize the visualization
+        updateVisualization();
+
+        // Set up event listeners for controls
+        document.getElementById("u0").addEventListener("input", function() {
+            u0 = parseFloat(this.value);
+            document.getElementById("u0-value").textContent = u0.toFixed(2);
+            updateVisualization();
+        });
+
+        document.getElementById("v0").addEventListener("input", function() {
+            v0 = parseFloat(this.value);
+            document.getElementById("v0-value").textContent = v0.toFixed(2);
+            updateVisualization();
+        });
+
+        document.getElementById("du").addEventListener("input", function() {
+            du = parseFloat(this.value);
+            document.getElementById("du-value").textContent = du.toFixed(2);
+            updateVisualization();
+        });
+
+        document.getElementById("dv").addEventListener("input", function() {
+            dv = parseFloat(this.value);
+            document.getElementById("dv-value").textContent = dv.toFixed(2);
+            updateVisualization();
+        });
+
+        // Handle window resize to update connection lines
+        window.addEventListener("resize", updateVisualization);
+    </script>
+</body>
+</html>

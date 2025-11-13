@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="keywords" content="Machine Learning, Mathematics, Optimization, AI, Notes">
+
+<title>Deriving the Change of Variables Formula: From 2D to n-Dimensional Spaces with proof – Naif Mersal</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../favicon.ico" rel="icon">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-707d8167ce6003fca903bfe2be84ab7f.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-60c89cba0dc229c2a8f3f8ce7717ee6c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-8ac9dd6d4f2534b7279d03122b205046.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-60c89cba0dc229c2a8f3f8ce7717ee6c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css">
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const queryPrefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+    const darkModeDefault = queryPrefersDark.matches;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    queryPrefersDark.addEventListener("change", e => {
+      if(window.localStorage.getItem("quarto-color-scheme") !== null)
+        return;
+      const alternate = e.matches
+      toggleColorMode(alternate);
+      localAlternateSentinel = e.matches ? 'alternate' : 'default'; // this is used alongside local storage!
+      toggleGiscusIfUsed(alternate, darkModeDefault);
+    });
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Naif Mersal</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../posts/index.html"> 
+<span class="menu-text">Posts</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/naifmersal"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/naif-al-mehmadi"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="mailto:naifmersal@gmail.com"> <i class="bi bi-envelope" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul class="collapse">
+  <li><a href="#sec-motivation" id="toc-sec-motivation" class="nav-link active" data-scroll-target="#sec-motivation"><span class="header-section-number">1</span> <strong>Motivation: What happens to area under a change of variables?</strong></a></li>
+  <li><a href="#sec-setting" id="toc-sec-setting" class="nav-link" data-scroll-target="#sec-setting"><span class="header-section-number">2</span> <strong>The setting: Spaces, transformations, and assumptions</strong></a></li>
+  <li><a href="#sec-guiding-question" id="toc-sec-guiding-question" class="nav-link" data-scroll-target="#sec-guiding-question"><span class="header-section-number">3</span> <strong>The guiding question: Area of a small rectangle du, dv</strong></a></li>
+  <li><a href="#sec-local-linearization" id="toc-sec-local-linearization" class="nav-link" data-scroll-target="#sec-local-linearization"><span class="header-section-number">4</span> <strong>Local Linearization and the Jacobian Matrix</strong></a></li>
+  <li><a href="#sec-edge-vectors" id="toc-sec-edge-vectors" class="nav-link" data-scroll-target="#sec-edge-vectors"><span class="header-section-number">5</span> <strong>Image of a small rectangle: Edge vectors</strong></a></li>
+  <li><a href="#sec-linear-approximation-area" id="toc-sec-linear-approximation-area" class="nav-link" data-scroll-target="#sec-linear-approximation-area"><span class="header-section-number">6</span> <strong>Area of the linear approximation</strong></a></li>
+  <li><a href="#sec-error-analysis" id="toc-sec-error-analysis" class="nav-link" data-scroll-target="#sec-error-analysis"><span class="header-section-number">7</span> <strong>Rigorous error analysis for area approximation</strong></a></li>
+  <li><a href="#sec-global-formula" id="toc-sec-global-formula" class="nav-link" data-scroll-target="#sec-global-formula"><span class="header-section-number">8</span> <strong>From local to global: The change of variables formula</strong></a></li>
+  <li><a href="#sec-examples" id="toc-sec-examples" class="nav-link" data-scroll-target="#sec-examples"><span class="header-section-number">9</span> <strong>Examples</strong></a></li>
+  <li><a href="#sec-summary-extension" id="toc-sec-summary-extension" class="nav-link" data-scroll-target="#sec-summary-extension"><span class="header-section-number">10</span> <strong>Final summary and extension to higher dimensions</strong></a></li>
+  <li><a href="#sec-essential-conditions" id="toc-sec-essential-conditions" class="nav-link" data-scroll-target="#sec-essential-conditions"><span class="header-section-number">11</span> <strong>Essential Conditions: When the Formula Applies</strong></a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><h1 class="title display-7">Deriving the Change of Variables Formula: From 2D to n-Dimensional Spaces with proof</h1></header>
+
+
+<header id="title-block-header">
+
+
+</header>
+
+
+<section id="sec-motivation" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="sec-motivation"><span class="header-section-number">1</span> <strong>Motivation: What happens to area under a change of variables?</strong></h2>
+<p>Let <span class="math inline">S \subset \mathbb{R}^2</span> be a bounded region in the <span class="math inline">(u,v)</span>-plane, and let <span class="math inline">T(S) \subset \mathbb{R}^2</span> be its image in the <span class="math inline">(x,y)</span>-plane under a transformation <span class="math inline">T</span>. Consider integrating a continuous function <span class="math inline">f</span> over <span class="math inline">T(S)</span>:</p>
+<p><span class="math display">
+\iint_{T(S)} f(x,y)  dx  dy.
+</span></p>
+<p>We introduce a <strong>smooth change of variables</strong> defined by:</p>
+<p><span class="math display">
+T: (u,v) \mapsto (x(u,v),  y(u,v)),
+</span></p>
+<p>where <span class="math inline">x, y: U \to \mathbb{R}</span> are <span class="math inline">C^1</span> functions on an open set <span class="math inline">U \subset \mathbb{R}^2</span> containing <span class="math inline">S</span>. The central question is:</p>
+<blockquote class="blockquote">
+<p><em>How does the area element <span class="math inline">dx  dy</span> transform under <span class="math inline">T</span>? Is it simply <span class="math inline">du  dv</span>, or is there a scaling factor?</em></p>
+</blockquote>
+<p>Our approach:</p>
+<ol type="1">
+<li>Derive the 2D scaling factor rigorously using local linearization<br>
+</li>
+<li>Generalize the geometric reasoning to n dimensions<br>
+</li>
+<li>Confirm the pattern holds universally for volume elements</li>
+</ol>
+<p>This progression reveals why the Jacobian determinant is the only natural scaling factor across dimensions.</p>
+<hr>
+</section>
+<section id="sec-setting" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="sec-setting"><span class="header-section-number">2</span> <strong>The setting: Spaces, transformations, and assumptions</strong></h2>
+<ul>
+<li><strong>Domain:</strong> <span class="math inline">U \subset \mathbb{R}^2</span> (open set) with coordinates <span class="math inline">(u,v)</span>.<br>
+</li>
+<li><strong>Transformation:</strong> <span class="math inline">T: U \to \mathbb{R}^2</span> defined by <span class="math inline">T(u,v) = (x(u,v),  y(u,v))</span>.<br>
+</li>
+<li><strong>Smoothness:</strong> <span class="math inline">T</span> is <span class="math inline">C^1</span> (continuously differentiable), i.e., <span class="math inline">\partial x/\partial u</span>, <span class="math inline">\partial x/\partial v</span>, <span class="math inline">\partial y/\partial u</span>, <span class="math inline">\partial y/\partial v</span> exist and are continuous on <span class="math inline">U</span>.<br>
+</li>
+<li><strong>Image:</strong> For any set <span class="math inline">S \subset U</span>, <span class="math inline">T(S) = \{ T(u,v) \mid (u,v) \in S \} \subset \mathbb{R}^2</span>.</li>
+</ul>
+<hr>
+</section>
+<section id="sec-guiding-question" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="sec-guiding-question"><span class="header-section-number">3</span> <strong>The guiding question: Area of a small rectangle du, dv</strong></h2>
+<p>Fix <span class="math inline">(u_0, v_0) \in U</span>. Consider a small rectangle centered at <span class="math inline">(u_0, v_0)</span>:</p>
+<p><span class="math display">
+R = [u_0, u_0 + \Delta u] \times [v_0, v_0 + \Delta v], \quad \Delta u &gt; 0,  \Delta v &gt; 0.
+</span></p>
+<p><img src="transformation_diagram.webp" class="img-fluid" alt="Figure 1"> <strong>Question:</strong> What is <span class="math inline">\text{Area}(T(R))</span> for infinitesimal <span class="math inline">\Delta u, \Delta v</span>?<br>
+Since <span class="math inline">T</span> is <span class="math inline">C^1</span>, it is locally approximated by a linear map. We exploit this to find a solution.</p>
+<hr>
+</section>
+<section id="sec-local-linearization" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="sec-local-linearization"><span class="header-section-number">4</span> <strong>Local Linearization and the Jacobian Matrix</strong></h2>
+<p>To understand how the transformation <span class="math inline">T</span> distorts area, we leverage its most important property “<strong>differentiability</strong>”. Because <span class="math inline">T</span> is <span class="math inline">C^1</span>, it can be closely approximated by a linear map near any point. This section defines the tools needed for that approximation.</p>
+<section id="the-jacobian-matrix-jacobian-matrix" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="the-jacobian-matrix-jacobian-matrix"><span class="header-section-number">4.1</span> <strong>The Jacobian Matrix</strong> {jacobian-matrix}</h3>
+<p>For a differentiable map <span class="math inline">T(u, v) = (x(u, v), y(u, v))</span>, the <strong>Jacobian matrix</strong> at <span class="math inline">(u_0, v_0)</span> is the matrix of its partial derivatives:</p>
+<p><span class="math display">
+DT(u_0, v_0) =
+\begin{pmatrix}
+\frac{\partial x}{\partial u} &amp; \frac{\partial x}{\partial v} \\[6pt]
+\frac{\partial y}{\partial u} &amp; \frac{\partial y}{\partial v}
+\end{pmatrix}_{(u_0,v_0)}
+</span></p>
+<p>This matrix, <span class="math inline">DT</span>, is the linear-algebraic representation of the derivative of <span class="math inline">T</span>. Its columns are the vectors <span class="math inline">\mathbf{T}_u = (\partial x/\partial u, \partial y/\partial u)^\top</span> and <span class="math inline">\mathbf{T}_v = (\partial x/\partial v, \partial y/\partial v)^\top</span>.</p>
+</section>
+<section id="linear-approximation" class="level3" data-number="4.2">
+<h3 data-number="4.2" class="anchored" data-anchor-id="linear-approximation"><span class="header-section-number">4.2</span> <strong>The Local Linear Approximation</strong></h3>
+<p>The differentiability of <span class="math inline">T</span> means that near a point <span class="math inline">(u_0, v_0)</span>, the function is well-approximated by its linear part. Formally, for a small displacement <span class="math inline">(\Delta u, \Delta v)</span>, we have:</p>
+<p><span class="math display">
+T(u_0 + \Delta u, v_0 + \Delta v) = T(u_0, v_0) + DT(u_0, v_0) \begin{pmatrix} \Delta u \\[2pt] \Delta v \end{pmatrix} + \mathbf{r}(\Delta u, \Delta v)
+</span></p>
+<p>Here, <span class="math inline">\mathbf{r}(\Delta u, \Delta v) = (r_1, r_2)</span> is a <strong>remainder vector</strong> that captures the error of this linear approximation.</p>
+</section>
+<section id="error-quantification" class="level3" data-number="4.3">
+<h3 data-number="4.3" class="anchored" data-anchor-id="error-quantification"><span class="header-section-number">4.3</span> <strong>The Key Property: Quantifying the Error</strong></h3>
+<p>The entire theory rests on how small the remainder <span class="math inline">\mathbf{r}</span> is. The differentiability of <span class="math inline">T</span> guarantees that <span class="math inline">\mathbf{r}</span> vanishes faster than the linear displacement itself. We can express this idea in two equivalent ways, which will lead to our two different proofs.</p>
+<section id="viewpoint-a" class="level4" data-number="4.3.1">
+<h4 data-number="4.3.1" class="anchored" data-anchor-id="viewpoint-a"><span class="header-section-number">4.3.1</span> <strong>Viewpoint A: The “Little-o” Notation</strong></h4>
+<p>This notation captures the intuition perfectly. We write:</p>
+<p><span class="math display">
+|\mathbf{r}(\Delta u, \Delta v)| = o\left(\sqrt{(\Delta u)^2 + (\Delta v)^2}\right) \quad \text{as } (\Delta u, \Delta v) \to (0,0)
+</span></p>
+<p>The notation <span class="math inline">f =o(g(x))</span> as <span class="math inline">x \to a</span> means the function <span class="math inline">f</span> is <em>much smaller</em> than <span class="math inline">g</span> as <span class="math inline">x \to a</span>. More formally:</p>
+<p><span class="math display">
+\lim_{x \to a} \frac{f(x)}{g(x)} = 0.
+</span></p>
+<p>In our case:</p>
+<p><span class="math display">
+\lim_{(\Delta u, \Delta v) \to (0,0)} \frac{|\mathbf{r}(\Delta u, \Delta v)|}{\sqrt{(\Delta u)^2 + (\Delta v)^2}} = 0
+</span></p>
+</section>
+<section id="viewpoint-b" class="level4" data-number="4.3.2">
+<h4 data-number="4.3.2" class="anchored" data-anchor-id="viewpoint-b"><span class="header-section-number">4.3.2</span> <strong>Viewpoint B: The “Epsilon-Delta” Definition</strong></h4>
+<p>This viewpoint makes the error bound explicit. For any chosen tolerance <span class="math inline">\varepsilon &gt; 0</span>, there exists a neighborhood around <span class="math inline">(u_0, v_0)</span> such that:</p>
+<p><span class="math display">
+|\mathbf{r}(\Delta u, \Delta v)| &lt; \varepsilon \sqrt{(\Delta u)^2 + (\Delta v)^2}
+</span></p>
+<p>whenever <span class="math inline">\sqrt{(\Delta u)^2 + (\Delta v)^2}</span> is sufficiently small.</p>
+<p><strong>Interpretation:</strong> We can force the error to be as small as we want relative to the displacement by restricting our view to a small enough region.</p>
+<p>These two viewpoints are logically equivalent. Viewpoint A is more concise and intuitive, while Viewpoint B is more explicit and constructive. In the following sections, we will use this local linearization to find the area of <span class="math inline">T(R)</span>.</p>
+<hr>
+</section>
+</section>
+</section>
+<section id="sec-edge-vectors" class="level2 page-columns page-full" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="sec-edge-vectors"><span class="header-section-number">5</span> <strong>Image of a small rectangle: Edge vectors</strong></h2>
+<p>The edges of <span class="math inline">R</span> emanating from <span class="math inline">(u_0, v_0)</span> map to vectors in <span class="math inline">\mathbb{R}^2</span>:</p>
+<p><span class="math display">
+\begin{aligned}
+\mathbf{a} &amp;= T(u_0 + \Delta u, v_0) - T(u_0, v_0) = \underbrace{\begin{pmatrix} x_u \\ y_u \end{pmatrix}_{(u_0,v_0)} \Delta u}_{\mathbf{T}_u  \Delta u} + \mathbf{r}_1, \\
+\mathbf{b} &amp;= T(u_0, v_0 + \Delta v) - T(u_0, v_0) = \underbrace{\begin{pmatrix} x_v \\ y_v \end{pmatrix}_{(u_0,v_0)} \Delta v}_{\mathbf{T}_v  \Delta v} + \mathbf{r}_2,
+\end{aligned}
+</span></p>
+<p>where:<br>
+- <span class="math inline">\mathbf{T}_u = (\partial x/\partial u,  \partial y/\partial u)^\top</span> and <span class="math inline">\mathbf{T}_v = (\partial x/\partial v,  \partial y/\partial v)^\top</span> are the <strong>column vectors of <span class="math inline">DT</span></strong>,<br>
+- <span class="math inline">\mathbf{r}_1 = \mathbf{r}(\Delta u, 0)</span> and <span class="math inline">\mathbf{r}_2 = \mathbf{r}(0, \Delta v)</span> are remainder vectors satisfying:<br>
+<span class="math display">
+  \lim_{\Delta u \to 0} \frac{\|\mathbf{r}_1\|}{|\Delta u|} = 0, \quad \lim_{\Delta v \to 0} \frac{\|\mathbf{r}_2\|}{|\Delta v|} = 0.
+  </span></p>
+<div class="column-body-outset">
+<iframe src="inter-plot.html" width="100%" height="800px" style="border:none;">
+</iframe>
+</div>
+<div class="column-body-outset callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Interactive Figure: Local Linearization in Action</strong></p>
+<blockquote class="blockquote">
+<p><em>Drag the handles or adjust the parameters (<span class="math inline">u_0</span>, <span class="math inline">v_0</span>, <span class="math inline">\Delta u</span>, <span class="math inline">\Delta v</span>) to see how the transformation <span class="math inline">T</span> distorts the rectangle <span class="math inline">R</span>.</em></p>
+</blockquote>
+<blockquote class="blockquote">
+<p>Observe how <span class="math inline">T(R)</span> <strong>approaches a parallelogram</strong> as <span class="math inline">\Delta u, \Delta v \to 0</span> — note that “approaches 0” means <em>gets smaller</em>, not <em>equals 0</em>.</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>See the edge vectors <span class="math inline">\mathbf{a} = T(u_0+\Delta u,v_0) - T(u_0,v_0)</span> and <span class="math inline">\mathbf{b} = T(u_0,v_0+\Delta v) - T(u_0,v_0)</span></p>
+</blockquote>
+</div>
+</div>
+<hr>
+</section>
+<section id="sec-linear-approximation-area" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="sec-linear-approximation-area"><span class="header-section-number">6</span> <strong>Area of the linear approximation</strong></h2>
+<p>Ignoring remainders (<span class="math inline">\mathbf{r}_1 = \mathbf{r}_2 = \mathbf{0}</span>), <span class="math inline">T(R)</span> approximates a parallelogram spanned by <span class="math inline">\mathbf{T}_u \Delta u</span> and <span class="math inline">\mathbf{T}_v \Delta v</span>. Its <strong>signed area</strong> is:</p>
+<p><span class="math display">
+\det \begin{bmatrix} \mathbf{T}_u \Delta u &amp; \mathbf{T}_v \Delta v \end{bmatrix} = \det \left( DT(u_0,v_0) \begin{pmatrix} \Delta u &amp; 0 \\ 0 &amp; \Delta v \end{pmatrix} \right) = \det(DT(u_0,v_0)) \cdot \Delta u  \Delta v.
+</span></p>
+<p><strong>Geometric meaning:</strong> <span class="math inline">\det(DT)</span> is the signed area scaling factor. For actual area, we take the absolute value <span class="math inline">|\det(DT)|</span>.</p>
+<p><strong>Crucially, this linear approximation becomes exact in the limit</strong> because differentiability (<a href="#sec-local-linearization" class="quarto-xref">Section&nbsp;4</a>) forces the remainder vectors <span class="math inline">\mathbf{r}_1, \mathbf{r}_2 \to \mathbf{0}</span> faster than <span class="math inline">\Delta u, \Delta v \to 0</span>. We now quantify this rigorously.</p>
+<hr>
+</section>
+<section id="sec-error-analysis" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="sec-error-analysis"><span class="header-section-number">7</span> <strong>Rigorous error analysis for area approximation</strong></h2>
+<p>The exact signed area of <span class="math inline">T(R)</span> is the determinant of the edge vectors <span class="math inline">\mathbf{a}</span> and <span class="math inline">\mathbf{b}</span> (<a href="#sec-edge-vectors" class="quarto-xref">Section&nbsp;5</a>):</p>
+<p><span class="math display">
+\det \begin{bmatrix} \mathbf{a} &amp; \mathbf{b} \end{bmatrix} = \det \begin{bmatrix} \mathbf{T}_u \Delta u + \mathbf{r}_1 &amp; \mathbf{T}_v \Delta v + \mathbf{r}_2 \end{bmatrix}.
+</span></p>
+<p>By bilinearity of the determinant:</p>
+<p><span class="math display">
+\begin{aligned}
+\det \begin{bmatrix} \mathbf{a} &amp; \mathbf{b} \end{bmatrix} &amp;= \det \begin{bmatrix} \mathbf{T}_u \Delta u &amp; \mathbf{T}_v \Delta v \end{bmatrix} + \det \begin{bmatrix} \mathbf{r}_1 &amp; \mathbf{T}_v \Delta v \end{bmatrix} + \det \begin{bmatrix} \mathbf{T}_u \Delta u &amp; \mathbf{r}_2 \end{bmatrix} + \det \begin{bmatrix} \mathbf{r}_1 &amp; \mathbf{r}_2 \end{bmatrix} \\
+&amp;= \det(DT) \cdot \Delta u  \Delta v + E(\Delta u, \Delta v),
+\end{aligned}
+</span></p>
+<p>where the <strong>error term</strong> <span class="math inline">E</span> is:</p>
+<p><span class="math display">
+E = \det \begin{bmatrix} \mathbf{r}_1 &amp; \mathbf{T}_v \Delta v \end{bmatrix} + \det \begin{bmatrix} \mathbf{T}_u \Delta u &amp; \mathbf{r}_2 \end{bmatrix} + \det \begin{bmatrix} \mathbf{r}_1 &amp; \mathbf{r}_2 \end{bmatrix}.
+</span></p>
+<p><strong>Why <span class="math inline">E \to 0</span> relative to <span class="math inline">\Delta u \Delta v</span>?</strong></p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href=""><strong>Proof using Little-o Notation</strong></a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href=""><strong>Proof using Epsilon-Delta Bounds</strong></a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p><strong>By differentiability (<a href="#sec-local-linearization" class="quarto-xref">Section&nbsp;4</a>):</strong><br>
+- <span class="math inline">\mathbf{r}(\Delta u, \Delta v) = o\left(\sqrt{(\Delta u)^2 + (\Delta v)^2}\right)</span> as <span class="math inline">(\Delta u, \Delta v) \to (0,0)</span>.<br>
+- For the edge remainders (<a href="#sec-edge-vectors" class="quarto-xref">Section&nbsp;5</a>), this implies:<br>
+<span class="math display">
+  \|\mathbf{r}_1\| = \|\mathbf{r}(\Delta u, 0)\| = o(|\Delta u|), \quad \|\mathbf{r}_2\| = \|\mathbf{r}(0, \Delta v)\| = o(|\Delta v|).
+  </span><br>
+<strong>By <span class="math inline">C^1</span> continuity:</strong> The partial derivatives are bounded near <span class="math inline">(u_0,v_0)</span>. Let <span class="math inline">M &gt; 0</span> satisfy:<br>
+<span class="math display">
+\|\mathbf{T}_u\| \leq M, \quad \|\mathbf{T}_v\| \leq M \quad \text{(in a neighborhood of $(u_0,v_0)$)}.
+</span></p>
+<p>Using <span class="math inline">\left| \det \begin{bmatrix} \mathbf{p} &amp; \mathbf{q} \end{bmatrix} \right| \leq \|\mathbf{p}\| \|\mathbf{q}\|</span>:<br>
+1. <strong>First error term:</strong><br>
+<span class="math display">
+   \left| \det \begin{bmatrix} \mathbf{r}_1 &amp; \mathbf{T}_v \Delta v \end{bmatrix} \right| \leq \|\mathbf{r}_1\| \cdot \|\mathbf{T}_v \Delta v\| \leq \underbrace{o(|\Delta u|)}_{\mathbf{r}_1} \cdot \underbrace{M |\Delta v|}_{\mathbf{T}_v \Delta v} = o(|\Delta u \Delta v|).
+   </span><br>
+2. <strong>Second error term:</strong><br>
+<span class="math display">
+   \left| \det \begin{bmatrix} \mathbf{T}_u \Delta u &amp; \mathbf{r}_2 \end{bmatrix} \right| \leq \|\mathbf{T}_u \Delta u\| \cdot \|\mathbf{r}_2\| \leq \underbrace{M |\Delta u|}_{\mathbf{T}_u \Delta u} \cdot \underbrace{o(|\Delta v|)}_{\mathbf{r}_2} = o(|\Delta u \Delta v|).
+   </span><br>
+3. <strong>Third error term:</strong><br>
+<span class="math display">
+   \left| \det \begin{bmatrix} \mathbf{r}_1 &amp; \mathbf{r}_2 \end{bmatrix} \right| \leq \|\mathbf{r}_1\| \|\mathbf{r}_2\| = \underbrace{o(|\Delta u|)}_{\mathbf{r}_1} \cdot \underbrace{o(|\Delta v|)}_{\mathbf{r}_2} = o(|\Delta u \Delta v|).
+   </span></p>
+<p><strong>Summing these:</strong><br>
+<span class="math display">
+|E| \leq o(|\Delta u \Delta v|) + o(|\Delta u \Delta v|) + o(|\Delta u \Delta v|) = o(|\Delta u \Delta v|).
+</span><br>
+Thus,<br>
+<span class="math display">
+\lim_{(\Delta u, \Delta v) \to (0,0)} \frac{E}{\Delta u  \Delta v} = 0.
+</span></p>
+<p><strong>Conclusion:</strong> The signed area is<br>
+<span class="math display">
+\det \begin{bmatrix} \mathbf{a} &amp; \mathbf{b} \end{bmatrix} = \det(DT(u_0,v_0)) \cdot \Delta u  \Delta v + o(\Delta u \Delta v).
+</span><br>
+For <strong>actual area</strong>, we take absolute values (noting <span class="math inline">o(\Delta u \Delta v)</span> absorbs sign changes):<br>
+<span class="math display">
+\boxed{\text{Area}(T(R)) = \left| \det(DT(u_0,v_0)) \right| \Delta u  \Delta v + o(\Delta u \Delta v)}
+</span></p>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p><strong>Error bound</strong><br>
+Using <span class="math inline">\left| \det \begin{bmatrix} \mathbf{p} &amp; \mathbf{q} \end{bmatrix} \right| \leq \|\mathbf{p}\| \|\mathbf{q}\|</span> (equality iff <span class="math inline">\mathbf{p} \perp \mathbf{q}</span>):<br>
+- Let <span class="math inline">M = \max \left\{ \|\mathbf{T}_u\|, \|\mathbf{T}_v\| \right\}</span> (finite since <span class="math inline">T</span> is <span class="math inline">C^1</span>).<br>
+- For any <span class="math inline">\varepsilon &gt; 0</span>, <span class="math inline">\exists \delta &gt; 0</span> such that <span class="math inline">\|\mathbf{r}_1\| &lt; \varepsilon |\Delta u|</span> and <span class="math inline">\|\mathbf{r}_2\| &lt; \varepsilon |\Delta v|</span> whenever <span class="math inline">\max(|\Delta u|, |\Delta v|) &lt; \delta</span>.<br>
+Then:<br>
+<span class="math display">
+\begin{aligned}
+|E| &amp;\leq |\Delta v| \cdot \|\mathbf{r}_1\| \|\mathbf{T}_v\| + |\Delta u| \cdot \|\mathbf{T}_u\| \|\mathbf{r}_2\| + \|\mathbf{r}_1\| \|\mathbf{r}_2\| \\
+&amp;&lt; |\Delta u| |\Delta v| \left( M \varepsilon + M \varepsilon + \varepsilon^2 \right) \\
+&amp;= |\Delta u| |\Delta v| \left( 2M \varepsilon + \varepsilon^2 \right).
+\end{aligned}
+</span><br>
+Thus:<br>
+<span class="math display">
+\frac{|E|}{|\Delta u  \Delta v|} &lt; 2M \varepsilon + \varepsilon^2 \xrightarrow[\delta \to 0]{} 0.
+</span><br>
+<strong>Conclusion:</strong> The signed area is <span class="math inline">\det(DT) \Delta u \Delta v + o(\Delta u \Delta v)</span>. For <strong>actual area</strong>, we take absolute values:<br>
+<span class="math display">
+\text{Area}(T(R)) = \left| \det(DT(u_0,v_0)) \right| \Delta u  \Delta v + o(\Delta u \Delta v).
+</span></p>
+</div>
+</div>
+</div>
+<hr>
+</section>
+<section id="sec-global-formula" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="sec-global-formula"><span class="header-section-number">8</span> <strong>From local to global: The change of variables formula</strong></h2>
+<p>Partition <span class="math inline">S \subset U</span> into small rectangles <span class="math inline">R_{ij}</span>. By our local analysis (<a href="#sec-error-analysis" class="quarto-xref">Section&nbsp;7</a>), the area of <span class="math inline">T(R_{ij})</span> is <span class="math inline">\left| \det(DT(u_i,v_j)) \right| \Delta u  \Delta v + o(\Delta u \Delta v)</span>. Summing over all rectangles and taking the limit as the partition refines:</p>
+<p><span class="math display">
+\text{Area}(T(S)) = \lim_{\max \Delta u, \Delta v \to 0} \sum_{i,j} \text{Area}(T(R_{ij})) = \iint_S \left| \det(DT(u,v)) \right|  du  dv.
+</span></p>
+<p>For a continuous function <span class="math inline">f</span>, the same partitioning argument gives:</p>
+<p><span class="math display">
+\boxed{
+\iint_{T(S)} f(x,y)  dx  dy = \iint_S f(T(u,v)) \left| \det(DT(u,v)) \right|  du  dv
+}
+</span></p>
+<hr>
+</section>
+<section id="sec-examples" class="level2" data-number="9">
+<h2 data-number="9" class="anchored" data-anchor-id="sec-examples"><span class="header-section-number">9</span> <strong>Examples</strong></h2>
+<ol type="1">
+<li><p><strong>Uniform scaling:</strong> <span class="math inline">T(u,v) = (2u, v)</span>.<br>
+<span class="math display">
+DT = \begin{pmatrix} 2 &amp; 0 \\ 0 &amp; 1 \end{pmatrix}, \quad \det(DT) = 2 \implies dx  dy = |2|  du  dv = 2  du  dv.
+</span><br>
+<em>Interpretation:</em> Areas double under <span class="math inline">T</span>.</p></li>
+<li><p><strong>Polar coordinates:</strong> <span class="math inline">T(r,\theta) = (r\cos\theta, r\sin\theta)</span> for <span class="math inline">r &gt; 0</span>.<br>
+<span class="math display">
+DT = \begin{pmatrix} \cos\theta &amp; -r\sin\theta \\ \sin\theta &amp; r\cos\theta \end{pmatrix}, \quad \det(DT) = r(\cos^2\theta + \sin^2\theta) = r.
+</span><br>
+Thus <span class="math inline">dx  dy = |r|  dr  d\theta = r  dr  d\theta</span> (since <span class="math inline">r &gt; 0</span>).<br>
+<em>Interpretation:</em> The factor <span class="math inline">r</span> accounts for increasing “width” of angular sectors at larger radius.</p></li>
+</ol>
+<hr>
+</section>
+<section id="sec-summary-extension" class="level2" data-number="10">
+<h2 data-number="10" class="anchored" data-anchor-id="sec-summary-extension"><span class="header-section-number">10</span> <strong>Final summary and extension to higher dimensions</strong></h2>
+<p>For a <span class="math inline">C^1</span> transformation <span class="math inline">T: (u,v) \mapsto (x,y)</span> with almost non-singular Jacobian (<span class="math inline">\det(DT) \neq 0</span>) on <span class="math inline">S</span>:</p>
+<p><span class="math display">
+\boxed{ dx  dy = \left| \det \begin{pmatrix} \partial x/\partial u &amp; \partial x/\partial v \\ \partial y/\partial u &amp; \partial y/\partial v \end{pmatrix} \right| du  dv }
+</span></p>
+<p><strong>This is the foundation of the change of variables formula.</strong> The absolute value of the Jacobian determinant universally quantifies how <span class="math inline">T</span> distorts infinitesimal areas. Rigorous justification requires <span class="math inline">C^1</span> smoothness to control linearization errors, as shown in <a href="#sec-error-analysis" class="quarto-xref">Section&nbsp;7</a>.</p>
+<hr>
+<p><strong>Crucially, this entire framework scales seamlessly to higher dimensions.</strong> For a <span class="math inline">C^1</span> transformation <span class="math inline">T: \mathbb{R}^n \to \mathbb{R}^n</span> defined by <span class="math inline">T(u_1, \dots, u_n) = (x_1, \dots, x_n)</span>, the Jacobian matrix <span class="math inline">DT</span> becomes an <span class="math inline">n \times n</span> matrix of partial derivatives:</p>
+<p><span class="math display">
+DT = \begin{pmatrix}
+\frac{\partial x_1}{\partial u_1} &amp; \cdots &amp; \frac{\partial x_1}{\partial u_n} \\
+\vdots &amp; \ddots &amp; \vdots \\
+\frac{\partial x_n}{\partial u_1} &amp; \cdots &amp; \frac{\partial x_n}{\partial u_n}
+\end{pmatrix}.
+</span></p>
+<p>The <strong>absolute value of its determinant</strong>, <span class="math inline">|\det(DT)|</span>, serves as the <em>local volume scaling factor</em> for infinitesimal <span class="math inline">n</span>-dimensional cubes. This is because:<br>
+1. <strong>Linear approximation:</strong> Near any point, <span class="math inline">T</span> is approximated by the linear map <span class="math inline">DT</span>.<br>
+2. <strong>Volume scaling:</strong> The determinant <span class="math inline">\det(DT)</span> gives the signed volume of the parallelepiped spanned by the column vectors of <span class="math inline">DT</span> (the images of the unit coordinate vectors).<br>
+3. <strong>Error control:</strong> Differentiability ensures nonlinear errors vanish faster than the volume element <span class="math inline">du_1 \cdots du_n</span> as the partition refines, exactly as in the <span class="math inline">\mathbb{R}^2</span> case (<a href="#sec-error-analysis" class="quarto-xref">Section&nbsp;7</a>).</p>
+<p>Consequently, the change of variables formula generalizes to:</p>
+<p><span class="math display">
+\int_{T(S)} f(\mathbf{x})  d\mathbf{x} = \int_S f(T(\mathbf{u})) \left| \det(DT(\mathbf{u})) \right|  d\mathbf{u},
+</span></p>
+<p>where <span class="math inline">d\mathbf{x} = dx_1 \cdots dx_n</span> and <span class="math inline">d\mathbf{u} = du_1 \cdots du_n</span>. Whether computing volumes in <span class="math inline">\mathbb{R}^3</span> (where <span class="math inline">|\det(DT)|</span> scales infinitesimal cubes), probability densities in statistics, or flux integrals in physics, <strong>the Jacobian determinant remains the universal scaling factor for volume elements under smooth coordinate transformations in any dimension.</strong></p>
+<hr>
+</section>
+<section id="sec-essential-conditions" class="level2" data-number="11">
+<h2 data-number="11" class="anchored" data-anchor-id="sec-essential-conditions"><span class="header-section-number">11</span> <strong>Essential Conditions: When the Formula Applies</strong></h2>
+<p>The derivation assumes the transformation <span class="math inline">T</span> behaves nicely. For the change of variables formula to hold, two geometric conditions are critical. Violating them breaks the fundamental interpretation of the Jacobian as a local scaling factor.</p>
+<section id="injectivity" class="level3" data-number="11.1">
+<h3 data-number="11.1" class="anchored" data-anchor-id="injectivity"><span class="header-section-number">11.1</span> <strong>Injectivity (One-to-One Mapping)</strong></h3>
+<p><span class="math inline">T</span> must be <strong>injective</strong> on <span class="math inline">S</span>; that is, distinct points <span class="math inline">(u,v)</span> in <span class="math inline">S</span> must map to distinct points <span class="math inline">(x,y)</span> in <span class="math inline">T(S)</span>.</p>
+<ul>
+<li><strong>Problem:</strong> If <span class="math inline">T</span> is not injective, it folds or overlaps the domain onto the image. A single point in <span class="math inline">T(S)</span> would be <strong>counted multiple times</strong> in the Riemann sum on the right-hand side, leading to an overcount of the area.</li>
+<li><strong>Resolution:</strong> In practice, if <span class="math inline">T</span> is not globally injective, we partition the domain <span class="math inline">S</span> into smaller regions where <span class="math inline">T</span> <em>is</em> injective and apply the formula to each part separately.</li>
+</ul>
+</section>
+<section id="non-singular" class="level3" data-number="11.2">
+<h3 data-number="11.2" class="anchored" data-anchor-id="non-singular"><span class="header-section-number">11.2</span> <strong>Non-Singular Jacobian (No Dimension Collapse)</strong></h3>
+<p>The Jacobian determinant must be non-zero, <span class="math inline">\det(DT) \neq 0</span>, almost everywhere on <span class="math inline">S</span>.</p>
+<ul>
+<li><strong>Problem:</strong> A zero Jacobian means the transformation is <strong>singular</strong> at that point.
+<ul>
+<li><span class="math inline">\det(DT) \neq 0</span>: The derivative <span class="math inline">DT</span> is an invertible linear map, and <span class="math inline">T</span> locally preserves dimension (a 2D region maps to a 2D region).</li>
+<li><span class="math inline">\det(DT) = 0</span>: The derivative <span class="math inline">DT</span> is not invertible, and <span class="math inline">T</span> <strong>collapses the dimension</strong>. For example, it could map a 2D neighborhood onto a 1D curve or even a single point (e.g., <span class="math inline">T(u,v)=(u, 0)</span> maps the plane to the x-axis).</li>
+</ul></li>
+<li><strong>Consequence:</strong> At a point where <span class="math inline">\det(DT)=0</span>, the concept of “area scaling” is meaningless because the image has zero area. The transformation ceases to be a valid change of coordinates at that point.</li>
+</ul>
+</section>
+<section id="key-takeaway" class="level3" data-number="11.3">
+<h3 data-number="11.3" class="anchored" data-anchor-id="key-takeaway"><span class="header-section-number">11.3</span> <strong>Key Takeaway</strong></h3>
+<p>The formula</p>
+<p><span class="math display">
+\iint_{T(S)} f(x,y)  dx  dy = \iint_S f(T(u,v)) \left| \det(DT(u,v)) \right|  du  dv
+</span></p>
+<p>holds rigorously when: 1. <span class="math inline">T</span> is <strong>injective</strong> on <span class="math inline">S</span>, and 2. <span class="math inline">T</span> is <strong><span class="math inline">C^1</span></strong> with <span class="math inline">\det(DT) \neq 0</span> on <span class="math inline">S</span>.</p>
+<blockquote class="blockquote">
+<p><strong>Practical Note:</strong> Often, the set where <span class="math inline">\det(DT) = 0</span> is small (e.g., a curve with zero area). If <span class="math inline">T</span> is injective <em>almost everywhere</em>, the formula still applies, as these singularities do not affect the integral’s value.</p>
+</blockquote>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/naifmersal\.github\.io");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+ © 2025 Naif Mersal
+  </li>  
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/naifmersal">
+      <i class="bi bi-github" role="img">
+</i> 
+    </a>
+  </li>  
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/naif-al-mehmadi">
+      <i class="bi bi-linkedin" role="img">
+</i> 
+    </a>
+  </li>  
+    <li class="nav-item compact">
+    <a class="nav-link" href="mailto:naifmersal@gmail.com">
+      <i class="bi bi-envelope" role="img">
+</i> 
+    </a>
+  </li>  
+</ul>
+    </div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+<script src="../../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>
