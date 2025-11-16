@@ -51,9 +51,47 @@
             pointer-events: none;
             z-index: 10;
         }
+        .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+        }
     </style>
 </head>
 <body>
+    <!-- START: SEO & Accessibility Content -->
+    <script type="application/ld+json">
+    {
+    "@context": "https://schema.org",
+    "@type": "EducationalTool",
+    "name": "Interactive Jacobian Matrix & Local Linearization Demo",
+    "description": "Visualize how the Jacobian matrix linearizes nonlinear transformations. Adjust parameters to see how small rectangles in the uv-plane map to parallelograms in the xy-plane via tangent plane approximation.",
+    "keywords": [
+        "Jacobian matrix",
+        "Local linearization",
+        "Multivariable calculus",
+        "Linear approximation",
+        "Transformation geometry",
+        "Differential calculus"
+    ],
+    "applicationCategory": "EducationalApplication",
+    "browserRequirements": "JavaScript-enabled browser"
+    }
+    </script>
+
+    <div class="visually-hidden" aria-label="Interactive demo description">
+    This interactive tool demonstrates local linearization using the Jacobian matrix. 
+    It shows how a nonlinear transformation T(u,v) = (x,y) behaves like its linear approximation 
+    (given by the Jacobian matrix) near a point (u₀,v₀). Users can adjust u₀, v₀, Δu, and Δv 
+    to see how a rectangle in the uv-plane maps to a parallelogram in the xy-plane under the transformation.
+    </div>
+    <!-- END: SEO & Accessibility Content -->
     <div class="container">
         <div class="plot" id="uv-plane">
             <div class="plot-title">(u,v) plane - S</div>

@@ -6,9 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="keywords" content="Machine Learning, Mathematics, Optimization, AI, Notes">
+<meta name="keywords" content="Jacobian determinant proof, change of variables formula, multivariable calculus, area scaling factor, volume element transformation, n-dimensional integration, calculus proof tutorial, Jacobian matrix application, mathematical derivation, coordinate transformation">
+<meta name="description" content="Rigorous derivation of the Jacobian determinant as the scaling factor for area/volume elements. Complete proof of change of variables formula in multivariable calculus with 2D→nD generalization.">
 
-<title>Deriving the Change of Variables Formula: From 2D to n-Dimensional Spaces with proof – Naif Mersal</title>
+<title>The Change of Variables Formula: A Derivation from the 2D Case to n Dimensions – Naif Mersal</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -31,7 +32,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../favicon.ico" rel="icon">
+<link href="../../favicon.png" rel="icon" type="image/png">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -44,9 +45,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-60c89cba0dc229c2a8f3f8ce7717ee6c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-8ac9dd6d4f2534b7279d03122b205046.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-60c89cba0dc229c2a8f3f8ce7717ee6c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-c01cc63432e49ff20a2da3faecc90136.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-7fb7319b1dba3165544e23caa5bcee5f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-c01cc63432e49ff20a2da3faecc90136.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -121,6 +122,7 @@ window.Quarto = {
 </script>
 
 <link rel="stylesheet" href="../../styles.css">
+<link rel="stylesheet" href="../styles.css">
 </head>
 
 <body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
@@ -312,12 +314,6 @@ window.Quarto = {
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav navbar-nav-scroll me-auto">
-  <li class="nav-item">
-    <a class="nav-link" href="../../posts/index.html"> 
-<span class="menu-text">Posts</span></a>
-  </li>  
-</ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/naifmersal"> <i class="bi bi-github" role="img">
@@ -359,14 +355,14 @@ window.Quarto = {
   <li><a href="#sec-linear-approximation-area" id="toc-sec-linear-approximation-area" class="nav-link" data-scroll-target="#sec-linear-approximation-area"><span class="header-section-number">6</span> <strong>Area of the linear approximation</strong></a></li>
   <li><a href="#sec-error-analysis" id="toc-sec-error-analysis" class="nav-link" data-scroll-target="#sec-error-analysis"><span class="header-section-number">7</span> <strong>Rigorous error analysis for area approximation</strong></a></li>
   <li><a href="#sec-global-formula" id="toc-sec-global-formula" class="nav-link" data-scroll-target="#sec-global-formula"><span class="header-section-number">8</span> <strong>From local to global: The change of variables formula</strong></a></li>
-  <li><a href="#sec-examples" id="toc-sec-examples" class="nav-link" data-scroll-target="#sec-examples"><span class="header-section-number">9</span> <strong>Examples</strong></a></li>
-  <li><a href="#sec-summary-extension" id="toc-sec-summary-extension" class="nav-link" data-scroll-target="#sec-summary-extension"><span class="header-section-number">10</span> <strong>Final summary and extension to higher dimensions</strong></a></li>
-  <li><a href="#sec-essential-conditions" id="toc-sec-essential-conditions" class="nav-link" data-scroll-target="#sec-essential-conditions"><span class="header-section-number">11</span> <strong>Essential Conditions: When the Formula Applies</strong></a></li>
+  <li><a href="#sec-essential-conditions" id="toc-sec-essential-conditions" class="nav-link" data-scroll-target="#sec-essential-conditions"><span class="header-section-number">9</span> <strong>Essential Conditions for Validity</strong></a></li>
+  <li><a href="#sec-examples" id="toc-sec-examples" class="nav-link" data-scroll-target="#sec-examples"><span class="header-section-number">10</span> <strong>Examples</strong></a></li>
+  <li><a href="#sec-summary-extension" id="toc-sec-summary-extension" class="nav-link" data-scroll-target="#sec-summary-extension"><span class="header-section-number">11</span> <strong>Final summary and extension to higher dimensions</strong></a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content page-columns page-full" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><h1 class="title display-7">Deriving the Change of Variables Formula: From 2D to n-Dimensional Spaces with proof</h1></header>
+<main class="content page-columns page-full" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><h1 class="title display-7">The Change of Variables Formula: A Derivation from the 2D Case to n Dimensions</h1></header>
 
 
 <header id="title-block-header">
@@ -426,8 +422,8 @@ Since <span class="math inline">T</span> is <span class="math inline">C^1</span>
 <section id="sec-local-linearization" class="level2" data-number="4">
 <h2 data-number="4" class="anchored" data-anchor-id="sec-local-linearization"><span class="header-section-number">4</span> <strong>Local Linearization and the Jacobian Matrix</strong></h2>
 <p>To understand how the transformation <span class="math inline">T</span> distorts area, we leverage its most important property “<strong>differentiability</strong>”. Because <span class="math inline">T</span> is <span class="math inline">C^1</span>, it can be closely approximated by a linear map near any point. This section defines the tools needed for that approximation.</p>
-<section id="the-jacobian-matrix-jacobian-matrix" class="level3" data-number="4.1">
-<h3 data-number="4.1" class="anchored" data-anchor-id="the-jacobian-matrix-jacobian-matrix"><span class="header-section-number">4.1</span> <strong>The Jacobian Matrix</strong> {jacobian-matrix}</h3>
+<section id="jacobian-matrix" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="jacobian-matrix"><span class="header-section-number">4.1</span> <strong>The Jacobian Matrix</strong></h3>
 <p>For a differentiable map <span class="math inline">T(u, v) = (x(u, v), y(u, v))</span>, the <strong>Jacobian matrix</strong> at <span class="math inline">(u_0, v_0)</span> is the matrix of its partial derivatives:</p>
 <p><span class="math display">
 DT(u_0, v_0) =
@@ -493,7 +489,7 @@ T(u_0 + \Delta u, v_0 + \Delta v) = T(u_0, v_0) + DT(u_0, v_0) \begin{pmatrix} \
   \lim_{\Delta u \to 0} \frac{\|\mathbf{r}_1\|}{|\Delta u|} = 0, \quad \lim_{\Delta v \to 0} \frac{\|\mathbf{r}_2\|}{|\Delta v|} = 0.
   </span></p>
 <div class="column-body-outset">
-<iframe src="inter-plot.html" width="100%" height="800px" style="border:none;">
+<iframe src="LocalLinearizationDemo.html" width="100%" height="800px" style="border:none;">
 </iframe>
 </div>
 <div class="column-body-outset callout callout-style-default callout-tip callout-titled">
@@ -506,7 +502,7 @@ Tip
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>Interactive Figure: Local Linearization in Action</strong></p>
+<p><strong>Interactive Figure: Local Linearization in Action (<a href="LocalLinearizationDemo.html" target="_blank" rel="noopener">click to open in a new tab</a>)</strong></p>
 <blockquote class="blockquote">
 <p><em>Drag the handles or adjust the parameters (<span class="math inline">u_0</span>, <span class="math inline">v_0</span>, <span class="math inline">\Delta u</span>, <span class="math inline">\Delta v</span>) to see how the transformation <span class="math inline">T</span> distorts the rectangle <span class="math inline">R</span>.</em></p>
 </blockquote>
@@ -522,11 +518,11 @@ Tip
 </section>
 <section id="sec-linear-approximation-area" class="level2" data-number="6">
 <h2 data-number="6" class="anchored" data-anchor-id="sec-linear-approximation-area"><span class="header-section-number">6</span> <strong>Area of the linear approximation</strong></h2>
-<p>Ignoring remainders (<span class="math inline">\mathbf{r}_1 = \mathbf{r}_2 = \mathbf{0}</span>), <span class="math inline">T(R)</span> approximates a parallelogram spanned by <span class="math inline">\mathbf{T}_u \Delta u</span> and <span class="math inline">\mathbf{T}_v \Delta v</span>. Its <strong>signed area</strong> is:</p>
+<p>Ignoring remainders (<span class="math inline">\mathbf{r}_1 = \mathbf{r}_2 = \mathbf{0}</span>), <span class="math inline">T(R)</span> approximates a parallelogram spanned by <span class="math inline">\mathbf{T}_u \Delta u</span> and <span class="math inline">\mathbf{T}_v \Delta v</span>.</p>
+<p>Using the fact that the <strong>determinant of a</strong> <span class="math inline">(2 \times 2)</span> <strong>matrix is the signed area</strong> of the parallelogram formed by its column vectors (and its absolute value gives the actual area), we obtain:</p>
 <p><span class="math display">
 \det \begin{bmatrix} \mathbf{T}_u \Delta u &amp; \mathbf{T}_v \Delta v \end{bmatrix} = \det \left( DT(u_0,v_0) \begin{pmatrix} \Delta u &amp; 0 \\ 0 &amp; \Delta v \end{pmatrix} \right) = \det(DT(u_0,v_0)) \cdot \Delta u  \Delta v.
 </span></p>
-<p><strong>Geometric meaning:</strong> <span class="math inline">\det(DT)</span> is the signed area scaling factor. For actual area, we take the absolute value <span class="math inline">|\det(DT)|</span>.</p>
 <p><strong>Crucially, this linear approximation becomes exact in the limit</strong> because differentiability (<a href="#sec-local-linearization" class="quarto-xref">Section&nbsp;4</a>) forces the remainder vectors <span class="math inline">\mathbf{r}_1, \mathbf{r}_2 \to \mathbf{0}</span> faster than <span class="math inline">\Delta u, \Delta v \to 0</span>. We now quantify this rigorously.</p>
 <hr>
 </section>
@@ -547,7 +543,12 @@ Tip
 <p><span class="math display">
 E = \det \begin{bmatrix} \mathbf{r}_1 &amp; \mathbf{T}_v \Delta v \end{bmatrix} + \det \begin{bmatrix} \mathbf{T}_u \Delta u &amp; \mathbf{r}_2 \end{bmatrix} + \det \begin{bmatrix} \mathbf{r}_1 &amp; \mathbf{r}_2 \end{bmatrix}.
 </span></p>
-<p><strong>Why <span class="math inline">E \to 0</span> relative to <span class="math inline">\Delta u \Delta v</span>?</strong></p>
+<p>Before we know Why <span class="math inline">E \to 0</span> relative to <span class="math inline">\Delta u \Delta v</span> remember that: <span class="math display">
+\det[\mathbf p\ \mathbf q]=|\mathbf p||\mathbf q|\sin\theta
+</span> Hence, <span class="math display">
+|\det[\mathbf p\ \mathbf q]| \le |\mathbf p||\mathbf q|
+</span></p>
+<p>Geometrically, <span class="math inline">|\det[\mathbf p\ \mathbf q]|</span> is exactly the area of the parallelogram spanned by <span class="math inline">(\mathbf p)</span> and <span class="math inline">(\mathbf q)</span>, so it cannot exceed the product of their lengths.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href=""><strong>Proof using Little-o Notation</strong></a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href=""><strong>Proof using Epsilon-Delta Bounds</strong></a></li></ul>
 <div class="tab-content">
@@ -632,8 +633,55 @@ Thus:<br>
 </span></p>
 <hr>
 </section>
-<section id="sec-examples" class="level2" data-number="9">
-<h2 data-number="9" class="anchored" data-anchor-id="sec-examples"><span class="header-section-number">9</span> <strong>Examples</strong></h2>
+<section id="sec-essential-conditions" class="level2" data-number="9">
+<h2 data-number="9" class="anchored" data-anchor-id="sec-essential-conditions"><span class="header-section-number">9</span> <strong>Essential Conditions for Validity</strong></h2>
+<p>The change of variables formula requires two conditions to ensure the Jacobian accurately captures local area scaling:</p>
+<section id="injectivity" class="level3" data-number="9.1">
+<h3 data-number="9.1" class="anchored" data-anchor-id="injectivity"><span class="header-section-number">9.1</span> <strong>1. Injectivity</strong></h3>
+<p><span class="math inline">T</span> must be <strong>one-to-one</strong> on <span class="math inline">S</span>: distinct points in <span class="math inline">S</span> map to distinct points in <span class="math inline">T(S)</span>.<br>
+- <strong>Why?</strong> Non-injective maps <em>fold</em> the domain, causing overcounting in integrals.<br>
+- <strong>Workaround:</strong> Partition <span class="math inline">S</span> into regions where <span class="math inline">T</span> <em>is</em> injective and apply the formula piecewise.</p>
+</section>
+<section id="non-singular" class="level3" data-number="9.2">
+<h3 data-number="9.2" class="anchored" data-anchor-id="non-singular"><span class="header-section-number">9.2</span> <strong>2. Non-Singular Jacobian</strong></h3>
+<p><span class="math inline">\det(DT) \neq 0</span> <strong>almost everywhere</strong> on <span class="math inline">S</span> (i.e., except on sets of <strong>measure zero</strong>).</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A set <span class="math inline">S \subset \mathbb{R}^n</span> has <strong>measure zero</strong> if:</p>
+<p>For every <span class="math inline">\varepsilon &gt; 0</span> you can cover <span class="math inline">S</span> with <strong>countably many</strong> rectangles (or balls) whose total volume is less than <span class="math inline">\varepsilon</span>.</p>
+<p><em>(Examples: isolated points, smooth curves in <span class="math inline">\mathbb{R}^2</span>.)</em></p>
+</div>
+</div>
+<ul>
+<li><strong>Why?</strong> Where <span class="math inline">\det(DT) = 0</span> on a set of <em>positive measure</em>, <span class="math inline">T</span> collapses regions to lower dimensions (e.g., surfaces to curves), breaking area scaling.<br>
+</li>
+<li><strong>Key point</strong>: Sets of measure zero do not affect integrals, so vanishing Jacobians there are harmless.</li>
+</ul>
+</section>
+<section id="key-takeaway" class="level3" data-number="9.3">
+<h3 data-number="9.3" class="anchored" data-anchor-id="key-takeaway"><span class="header-section-number">9.3</span> <strong>Formula Validity</strong></h3>
+<p>The formula<br>
+<span class="math display">
+\iint_{T(S)} f(x,y)  dx  dy
+= \iint_S f(T(u,v))  \big|\det(DT(u,v))\big|  du  dv
+</span><br>
+holds when:<br>
+1. <span class="math inline">T</span> is <strong>injective</strong> on <span class="math inline">S</span>,<br>
+2. <span class="math inline">T</span> is <strong><span class="math inline">C^1</span></strong> (continuously differentiable), and<br>
+3. <span class="math inline">\det(DT) \neq 0</span> <strong>almost everywhere</strong> on <span class="math inline">S</span>.</p>
+<hr>
+</section>
+</section>
+<section id="sec-examples" class="level2" data-number="10">
+<h2 data-number="10" class="anchored" data-anchor-id="sec-examples"><span class="header-section-number">10</span> <strong>Examples</strong></h2>
 <ol type="1">
 <li><p><strong>Uniform scaling:</strong> <span class="math inline">T(u,v) = (2u, v)</span>.<br>
 <span class="math display">
@@ -649,8 +697,8 @@ Thus <span class="math inline">dx  dy = |r|  dr  d\theta = r  dr  d\theta</span>
 </ol>
 <hr>
 </section>
-<section id="sec-summary-extension" class="level2" data-number="10">
-<h2 data-number="10" class="anchored" data-anchor-id="sec-summary-extension"><span class="header-section-number">10</span> <strong>Final summary and extension to higher dimensions</strong></h2>
+<section id="sec-summary-extension" class="level2" data-number="11">
+<h2 data-number="11" class="anchored" data-anchor-id="sec-summary-extension"><span class="header-section-number">11</span> <strong>Final summary and extension to higher dimensions</strong></h2>
 <p>For a <span class="math inline">C^1</span> transformation <span class="math inline">T: (u,v) \mapsto (x,y)</span> with almost non-singular Jacobian (<span class="math inline">\det(DT) \neq 0</span>) on <span class="math inline">S</span>:</p>
 <p><span class="math display">
 \boxed{ dx  dy = \left| \det \begin{pmatrix} \partial x/\partial u &amp; \partial x/\partial v \\ \partial y/\partial u &amp; \partial y/\partial v \end{pmatrix} \right| du  dv }
@@ -674,44 +722,8 @@ DT = \begin{pmatrix}
 \int_{T(S)} f(\mathbf{x})  d\mathbf{x} = \int_S f(T(\mathbf{u})) \left| \det(DT(\mathbf{u})) \right|  d\mathbf{u},
 </span></p>
 <p>where <span class="math inline">d\mathbf{x} = dx_1 \cdots dx_n</span> and <span class="math inline">d\mathbf{u} = du_1 \cdots du_n</span>. Whether computing volumes in <span class="math inline">\mathbb{R}^3</span> (where <span class="math inline">|\det(DT)|</span> scales infinitesimal cubes), probability densities in statistics, or flux integrals in physics, <strong>the Jacobian determinant remains the universal scaling factor for volume elements under smooth coordinate transformations in any dimension.</strong></p>
-<hr>
-</section>
-<section id="sec-essential-conditions" class="level2" data-number="11">
-<h2 data-number="11" class="anchored" data-anchor-id="sec-essential-conditions"><span class="header-section-number">11</span> <strong>Essential Conditions: When the Formula Applies</strong></h2>
-<p>The derivation assumes the transformation <span class="math inline">T</span> behaves nicely. For the change of variables formula to hold, two geometric conditions are critical. Violating them breaks the fundamental interpretation of the Jacobian as a local scaling factor.</p>
-<section id="injectivity" class="level3" data-number="11.1">
-<h3 data-number="11.1" class="anchored" data-anchor-id="injectivity"><span class="header-section-number">11.1</span> <strong>Injectivity (One-to-One Mapping)</strong></h3>
-<p><span class="math inline">T</span> must be <strong>injective</strong> on <span class="math inline">S</span>; that is, distinct points <span class="math inline">(u,v)</span> in <span class="math inline">S</span> must map to distinct points <span class="math inline">(x,y)</span> in <span class="math inline">T(S)</span>.</p>
-<ul>
-<li><strong>Problem:</strong> If <span class="math inline">T</span> is not injective, it folds or overlaps the domain onto the image. A single point in <span class="math inline">T(S)</span> would be <strong>counted multiple times</strong> in the Riemann sum on the right-hand side, leading to an overcount of the area.</li>
-<li><strong>Resolution:</strong> In practice, if <span class="math inline">T</span> is not globally injective, we partition the domain <span class="math inline">S</span> into smaller regions where <span class="math inline">T</span> <em>is</em> injective and apply the formula to each part separately.</li>
-</ul>
-</section>
-<section id="non-singular" class="level3" data-number="11.2">
-<h3 data-number="11.2" class="anchored" data-anchor-id="non-singular"><span class="header-section-number">11.2</span> <strong>Non-Singular Jacobian (No Dimension Collapse)</strong></h3>
-<p>The Jacobian determinant must be non-zero, <span class="math inline">\det(DT) \neq 0</span>, almost everywhere on <span class="math inline">S</span>.</p>
-<ul>
-<li><strong>Problem:</strong> A zero Jacobian means the transformation is <strong>singular</strong> at that point.
-<ul>
-<li><span class="math inline">\det(DT) \neq 0</span>: The derivative <span class="math inline">DT</span> is an invertible linear map, and <span class="math inline">T</span> locally preserves dimension (a 2D region maps to a 2D region).</li>
-<li><span class="math inline">\det(DT) = 0</span>: The derivative <span class="math inline">DT</span> is not invertible, and <span class="math inline">T</span> <strong>collapses the dimension</strong>. For example, it could map a 2D neighborhood onto a 1D curve or even a single point (e.g., <span class="math inline">T(u,v)=(u, 0)</span> maps the plane to the x-axis).</li>
-</ul></li>
-<li><strong>Consequence:</strong> At a point where <span class="math inline">\det(DT)=0</span>, the concept of “area scaling” is meaningless because the image has zero area. The transformation ceases to be a valid change of coordinates at that point.</li>
-</ul>
-</section>
-<section id="key-takeaway" class="level3" data-number="11.3">
-<h3 data-number="11.3" class="anchored" data-anchor-id="key-takeaway"><span class="header-section-number">11.3</span> <strong>Key Takeaway</strong></h3>
-<p>The formula</p>
-<p><span class="math display">
-\iint_{T(S)} f(x,y)  dx  dy = \iint_S f(T(u,v)) \left| \det(DT(u,v)) \right|  du  dv
-</span></p>
-<p>holds rigorously when: 1. <span class="math inline">T</span> is <strong>injective</strong> on <span class="math inline">S</span>, and 2. <span class="math inline">T</span> is <strong><span class="math inline">C^1</span></strong> with <span class="math inline">\det(DT) \neq 0</span> on <span class="math inline">S</span>.</p>
-<blockquote class="blockquote">
-<p><strong>Practical Note:</strong> Often, the set where <span class="math inline">\det(DT) = 0</span> is small (e.g., a curve with zero area). If <span class="math inline">T</span> is injective <em>almost everywhere</em>, the formula still applies, as these singularities do not affect the integral’s value.</p>
-</blockquote>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->

@@ -4,6 +4,23 @@
   margin: 1.2em 0;
 } */
 
-.katex {
+/* .katex {
   font-family: 'Latin Modern Math', 'Times New Roman', serif;
+}
+
+/* --- Heading level 2 --- */
+
+
+.logo-container {
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.rounded-logo {
+  border-radius: 50%;
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border: 3px solid #f0f0f0;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
