@@ -347,17 +347,16 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul class="collapse">
-  <li><a href="#sec-motivation" id="toc-sec-motivation" class="nav-link active" data-scroll-target="#sec-motivation"><span class="header-section-number">1</span> <strong>Motivation: What happens to area under a change of variables?</strong></a></li>
+  <li><a href="#sec-motivation" id="toc-sec-motivation" class="nav-link active" data-scroll-target="#sec-motivation"><span class="header-section-number">1</span> Motivation: The geometry of area scaling</a></li>
   <li><a href="#sec-setting" id="toc-sec-setting" class="nav-link" data-scroll-target="#sec-setting"><span class="header-section-number">2</span> <strong>The setting: Spaces, transformations, and assumptions</strong></a></li>
-  <li><a href="#sec-guiding-question" id="toc-sec-guiding-question" class="nav-link" data-scroll-target="#sec-guiding-question"><span class="header-section-number">3</span> <strong>The guiding question: Area of a small rectangle du, dv</strong></a></li>
-  <li><a href="#sec-local-linearization" id="toc-sec-local-linearization" class="nav-link" data-scroll-target="#sec-local-linearization"><span class="header-section-number">4</span> <strong>Local Linearization and the Jacobian Matrix</strong></a></li>
-  <li><a href="#sec-edge-vectors" id="toc-sec-edge-vectors" class="nav-link" data-scroll-target="#sec-edge-vectors"><span class="header-section-number">5</span> <strong>Image of a small rectangle: Edge vectors</strong></a></li>
-  <li><a href="#sec-linear-approximation-area" id="toc-sec-linear-approximation-area" class="nav-link" data-scroll-target="#sec-linear-approximation-area"><span class="header-section-number">6</span> <strong>Area of the linear approximation</strong></a></li>
-  <li><a href="#sec-error-analysis" id="toc-sec-error-analysis" class="nav-link" data-scroll-target="#sec-error-analysis"><span class="header-section-number">7</span> <strong>Rigorous error analysis for area approximation</strong></a></li>
-  <li><a href="#sec-global-formula" id="toc-sec-global-formula" class="nav-link" data-scroll-target="#sec-global-formula"><span class="header-section-number">8</span> <strong>From local to global: The change of variables formula</strong></a></li>
-  <li><a href="#sec-essential-conditions" id="toc-sec-essential-conditions" class="nav-link" data-scroll-target="#sec-essential-conditions"><span class="header-section-number">9</span> <strong>Essential Conditions for Validity</strong></a></li>
-  <li><a href="#sec-examples" id="toc-sec-examples" class="nav-link" data-scroll-target="#sec-examples"><span class="header-section-number">10</span> <strong>Examples</strong></a></li>
-  <li><a href="#sec-summary-extension" id="toc-sec-summary-extension" class="nav-link" data-scroll-target="#sec-summary-extension"><span class="header-section-number">11</span> <strong>Final summary and extension to higher dimensions</strong></a></li>
+  <li><a href="#sec-local-linearization" id="toc-sec-local-linearization" class="nav-link" data-scroll-target="#sec-local-linearization"><span class="header-section-number">3</span> <strong>Local Linearization and the Jacobian Matrix</strong></a></li>
+  <li><a href="#sec-edge-vectors" id="toc-sec-edge-vectors" class="nav-link" data-scroll-target="#sec-edge-vectors"><span class="header-section-number">4</span> <strong>Image of a small rectangle: Edge vectors</strong></a></li>
+  <li><a href="#sec-linear-approximation-area" id="toc-sec-linear-approximation-area" class="nav-link" data-scroll-target="#sec-linear-approximation-area"><span class="header-section-number">5</span> <strong>Area of the linear approximation</strong></a></li>
+  <li><a href="#sec-error-analysis" id="toc-sec-error-analysis" class="nav-link" data-scroll-target="#sec-error-analysis"><span class="header-section-number">6</span> <strong>Rigorous error analysis for area approximation</strong></a></li>
+  <li><a href="#sec-global-formula" id="toc-sec-global-formula" class="nav-link" data-scroll-target="#sec-global-formula"><span class="header-section-number">7</span> <strong>From local to global: The change of variables formula</strong></a></li>
+  <li><a href="#sec-essential-conditions" id="toc-sec-essential-conditions" class="nav-link" data-scroll-target="#sec-essential-conditions"><span class="header-section-number">8</span> <strong>Essential Conditions for Validity</strong></a></li>
+  <li><a href="#sec-examples" id="toc-sec-examples" class="nav-link" data-scroll-target="#sec-examples"><span class="header-section-number">9</span> <strong>Examples</strong></a></li>
+  <li><a href="#sec-summary-extension" id="toc-sec-summary-extension" class="nav-link" data-scroll-target="#sec-summary-extension"><span class="header-section-number">10</span> <strong>Final summary and extension to higher dimensions</strong></a></li>
   </ul>
 </nav>
     </div>
@@ -372,29 +371,57 @@ window.Quarto = {
 
 
 <section id="sec-motivation" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="sec-motivation"><span class="header-section-number">1</span> <strong>Motivation: What happens to area under a change of variables?</strong></h2>
-<p>Let <span class="math inline">S \subset \mathbb{R}^2</span> be a bounded region in the <span class="math inline">(u,v)</span>-plane, and let <span class="math inline">T(S) \subset \mathbb{R}^2</span> be its image in the <span class="math inline">(x,y)</span>-plane under a transformation <span class="math inline">T</span>. Consider integrating a continuous function <span class="math inline">f</span> over <span class="math inline">T(S)</span>:</p>
-<p><span class="math display">
-\iint_{T(S)} f(x,y)  dx  dy.
-</span></p>
-<p>We introduce a <strong>smooth change of variables</strong> defined by:</p>
-<p><span class="math display">
-T: (u,v) \mapsto (x(u,v),  y(u,v)),
-</span></p>
-<p>where <span class="math inline">x, y: U \to \mathbb{R}</span> are <span class="math inline">C^1</span> functions on an open set <span class="math inline">U \subset \mathbb{R}^2</span> containing <span class="math inline">S</span>. The central question is:</p>
-<blockquote class="blockquote">
-<p><em>How does the area element <span class="math inline">dx  dy</span> transform under <span class="math inline">T</span>? Is it simply <span class="math inline">du  dv</span>, or is there a scaling factor?</em></p>
-</blockquote>
-<p>Our approach:</p>
-<ol type="1">
-<li>Derive the 2D scaling factor rigorously using local linearization<br>
-</li>
-<li>Generalize the geometric reasoning to n dimensions<br>
-</li>
-<li>Confirm the pattern holds universally for volume elements</li>
-</ol>
-<p>This progression reveals why the Jacobian determinant is the only natural scaling factor across dimensions.</p>
+<h2 data-number="1" class="anchored" data-anchor-id="sec-motivation"><span class="header-section-number">1</span> Motivation: The geometry of area scaling</h2>
+<p>We want to compute an integral over a region <span class="math inline">D</span> in the <span class="math inline">xy</span>-plane that is difficult to integrate over directly:<br>
+<span class="math display">
+\iint_D f(x,y)  dx  dy.
+</span><br>
+Suppose we have a smooth change of variables <span class="math inline">T</span> mapping a simpler region <span class="math inline">S</span> in the <span class="math inline">uv</span>-plane to <span class="math inline">D</span>:<br>
+<span class="math display">
+T(u,v) = \bigl( x(u,v),  y(u,v) \bigr), \quad D = T(S).
+</span><br>
+<strong>Substituting <span class="math inline">f</span> is straightforward:</strong><br>
+<span class="math display">
+f(x,y) \quad \text{becomes} \quad f\bigl( x(u,v), y(u,v) \bigr).
+</span><br>
+But <strong>what happens to the area element <span class="math inline">dx  dy</span>?</strong> This is the heart of the matter.</p>
+<section id="how-integrals-are-built-recalling-the-foundation" class="level3" data-number="1.1">
+<h3 data-number="1.1" class="anchored" data-anchor-id="how-integrals-are-built-recalling-the-foundation"><span class="header-section-number">1.1</span> <strong>How integrals are built (recalling the foundation)</strong></h3>
+<p>Double integrals are defined as limits of Riemann sums. We:<br>
+1. Partition <span class="math inline">D</span> into tiny rectangles <span class="math inline">R_i</span> with area <span class="math inline">\approx \Delta x_i \Delta y_i</span>,<br>
+2. Sample <span class="math inline">f</span> at points <span class="math inline">(x_i,y_i) \in R_i</span>,<br>
+3. Sum: <span class="math inline">\sum f(x_i,y_i) \cdot (\Delta x_i \Delta y_i)</span>,<br>
+4. Take the limit as rectangles shrink: <span class="math inline">\iint_D f  dx  dy = \lim_{\max|R_i|\to 0} \sum f(x_i,y_i) \Delta x_i \Delta y_i</span>.</p>
+</section>
+<section id="the-transformation-warps-area" class="level3" data-number="1.2">
+<h3 data-number="1.2" class="anchored" data-anchor-id="the-transformation-warps-area"><span class="header-section-number">1.2</span> <strong>The transformation warps area</strong></h3>
+<p>Under <span class="math inline">T</span>, our partition of <span class="math inline">S</span> (in <span class="math inline">uv</span>-coordinates) maps to a partition of <span class="math inline">D</span>:<br>
+- A tiny rectangle <span class="math inline">R = [u_0, u_0+\Delta u] \times [v_0, v_0+\Delta v]</span> in <span class="math inline">S</span> (area <span class="math inline">= \Delta u  \Delta v</span>),<br>
+- Maps to a <em>curved patch</em> <span class="math inline">T(R)</span> in <span class="math inline">D</span> (area <span class="math inline">\neq \Delta u  \Delta v</span>). See the figure:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="transformation_diagram.webp" class="img-fluid figure-img"></p>
+<figcaption>Figure 1: The transformation T maps a region S in the (u,v)-plane to a region T(S) in the (x,y)-plane. A rectangle R is mapped to a curved region T(R), whose area we wish to find.</figcaption>
+</figure>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Caution
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Critical observation:</strong><br>
+<em><span class="math inline">dx  dy</span> is <strong>not</strong> simply <span class="math inline">du  dv</span>. The transformation <span class="math inline">T</span> distorts area.</em></p>
+</div>
+</div>
+<p><strong>Question:</strong> How can we compute the <span class="math inline">\text{Area}(T(R))</span>?</p>
+<p>To answer this, we first set up the spaces and assumptions.</p>
 <hr>
+</section>
 </section>
 <section id="sec-setting" class="level2" data-number="2">
 <h2 data-number="2" class="anchored" data-anchor-id="sec-setting"><span class="header-section-number">2</span> <strong>The setting: Spaces, transformations, and assumptions</strong></h2>
@@ -409,21 +436,11 @@ T: (u,v) \mapsto (x(u,v),  y(u,v)),
 </ul>
 <hr>
 </section>
-<section id="sec-guiding-question" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="sec-guiding-question"><span class="header-section-number">3</span> <strong>The guiding question: Area of a small rectangle du, dv</strong></h2>
-<p>Fix <span class="math inline">(u_0, v_0) \in U</span>. Consider a small rectangle centered at <span class="math inline">(u_0, v_0)</span>:</p>
-<p><span class="math display">
-R = [u_0, u_0 + \Delta u] \times [v_0, v_0 + \Delta v], \quad \Delta u &gt; 0,  \Delta v &gt; 0.
-</span></p>
-<p><img src="transformation_diagram.webp" class="img-fluid" alt="Figure 1"> <strong>Question:</strong> What is <span class="math inline">\text{Area}(T(R))</span> for infinitesimal <span class="math inline">\Delta u, \Delta v</span>?<br>
-Since <span class="math inline">T</span> is <span class="math inline">C^1</span>, it is locally approximated by a linear map. We exploit this to find a solution.</p>
-<hr>
-</section>
-<section id="sec-local-linearization" class="level2" data-number="4">
-<h2 data-number="4" class="anchored" data-anchor-id="sec-local-linearization"><span class="header-section-number">4</span> <strong>Local Linearization and the Jacobian Matrix</strong></h2>
-<p>To understand how the transformation <span class="math inline">T</span> distorts area, we leverage its most important property “<strong>differentiability</strong>”. Because <span class="math inline">T</span> is <span class="math inline">C^1</span>, it can be closely approximated by a linear map near any point. This section defines the tools needed for that approximation.</p>
-<section id="jacobian-matrix" class="level3" data-number="4.1">
-<h3 data-number="4.1" class="anchored" data-anchor-id="jacobian-matrix"><span class="header-section-number">4.1</span> <strong>The Jacobian Matrix</strong></h3>
+<section id="sec-local-linearization" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="sec-local-linearization"><span class="header-section-number">3</span> <strong>Local Linearization and the Jacobian Matrix</strong></h2>
+<p>To understand how the transformation <span class="math inline">T</span> distorts area, we leverage its most important property “<strong>differentiability</strong>”. Because <span class="math inline">T</span> is <span class="math inline">C^1</span>, it can be closely approximated by a linear map near any point.</p>
+<section id="jacobian-matrix" class="level3" data-number="3.1">
+<h3 data-number="3.1" class="anchored" data-anchor-id="jacobian-matrix"><span class="header-section-number">3.1</span> <strong>The Jacobian Matrix</strong></h3>
 <p>For a differentiable map <span class="math inline">T(u, v) = (x(u, v), y(u, v))</span>, the <strong>Jacobian matrix</strong> at <span class="math inline">(u_0, v_0)</span> is the matrix of its partial derivatives:</p>
 <p><span class="math display">
 DT(u_0, v_0) =
@@ -434,19 +451,19 @@ DT(u_0, v_0) =
 </span></p>
 <p>This matrix, <span class="math inline">DT</span>, is the linear-algebraic representation of the derivative of <span class="math inline">T</span>. Its columns are the vectors <span class="math inline">\mathbf{T}_u = (\partial x/\partial u, \partial y/\partial u)^\top</span> and <span class="math inline">\mathbf{T}_v = (\partial x/\partial v, \partial y/\partial v)^\top</span>.</p>
 </section>
-<section id="linear-approximation" class="level3" data-number="4.2">
-<h3 data-number="4.2" class="anchored" data-anchor-id="linear-approximation"><span class="header-section-number">4.2</span> <strong>The Local Linear Approximation</strong></h3>
+<section id="linear-approximation" class="level3" data-number="3.2">
+<h3 data-number="3.2" class="anchored" data-anchor-id="linear-approximation"><span class="header-section-number">3.2</span> <strong>The Local Linear Approximation</strong></h3>
 <p>The differentiability of <span class="math inline">T</span> means that near a point <span class="math inline">(u_0, v_0)</span>, the function is well-approximated by its linear part. Formally, for a small displacement <span class="math inline">(\Delta u, \Delta v)</span>, we have:</p>
 <p><span class="math display">
 T(u_0 + \Delta u, v_0 + \Delta v) = T(u_0, v_0) + DT(u_0, v_0) \begin{pmatrix} \Delta u \\[2pt] \Delta v \end{pmatrix} + \mathbf{r}(\Delta u, \Delta v)
 </span></p>
 <p>Here, <span class="math inline">\mathbf{r}(\Delta u, \Delta v) = (r_1, r_2)</span> is a <strong>remainder vector</strong> that captures the error of this linear approximation.</p>
 </section>
-<section id="error-quantification" class="level3" data-number="4.3">
-<h3 data-number="4.3" class="anchored" data-anchor-id="error-quantification"><span class="header-section-number">4.3</span> <strong>The Key Property: Quantifying the Error</strong></h3>
+<section id="error-quantification" class="level3" data-number="3.3">
+<h3 data-number="3.3" class="anchored" data-anchor-id="error-quantification"><span class="header-section-number">3.3</span> <strong>The Key Property: Quantifying the Error</strong></h3>
 <p>The entire theory rests on how small the remainder <span class="math inline">\mathbf{r}</span> is. The differentiability of <span class="math inline">T</span> guarantees that <span class="math inline">\mathbf{r}</span> vanishes faster than the linear displacement itself. We can express this idea in two equivalent ways, which will lead to our two different proofs.</p>
-<section id="viewpoint-a" class="level4" data-number="4.3.1">
-<h4 data-number="4.3.1" class="anchored" data-anchor-id="viewpoint-a"><span class="header-section-number">4.3.1</span> <strong>Viewpoint A: The “Little-o” Notation</strong></h4>
+<section id="viewpoint-a" class="level4" data-number="3.3.1">
+<h4 data-number="3.3.1" class="anchored" data-anchor-id="viewpoint-a"><span class="header-section-number">3.3.1</span> <strong>Viewpoint A: The “Little-o” Notation</strong></h4>
 <p>This notation captures the intuition perfectly. We write:</p>
 <p><span class="math display">
 |\mathbf{r}(\Delta u, \Delta v)| = o\left(\sqrt{(\Delta u)^2 + (\Delta v)^2}\right) \quad \text{as } (\Delta u, \Delta v) \to (0,0)
@@ -460,21 +477,21 @@ T(u_0 + \Delta u, v_0 + \Delta v) = T(u_0, v_0) + DT(u_0, v_0) \begin{pmatrix} \
 \lim_{(\Delta u, \Delta v) \to (0,0)} \frac{|\mathbf{r}(\Delta u, \Delta v)|}{\sqrt{(\Delta u)^2 + (\Delta v)^2}} = 0
 </span></p>
 </section>
-<section id="viewpoint-b" class="level4" data-number="4.3.2">
-<h4 data-number="4.3.2" class="anchored" data-anchor-id="viewpoint-b"><span class="header-section-number">4.3.2</span> <strong>Viewpoint B: The “Epsilon-Delta” Definition</strong></h4>
+<section id="viewpoint-b" class="level4" data-number="3.3.2">
+<h4 data-number="3.3.2" class="anchored" data-anchor-id="viewpoint-b"><span class="header-section-number">3.3.2</span> <strong>Viewpoint B: The “Epsilon-Delta” Definition</strong></h4>
 <p>This viewpoint makes the error bound explicit. For any chosen tolerance <span class="math inline">\varepsilon &gt; 0</span>, there exists a neighborhood around <span class="math inline">(u_0, v_0)</span> such that:</p>
 <p><span class="math display">
 |\mathbf{r}(\Delta u, \Delta v)| &lt; \varepsilon \sqrt{(\Delta u)^2 + (\Delta v)^2}
 </span></p>
 <p>whenever <span class="math inline">\sqrt{(\Delta u)^2 + (\Delta v)^2}</span> is sufficiently small.</p>
 <p><strong>Interpretation:</strong> We can force the error to be as small as we want relative to the displacement by restricting our view to a small enough region.</p>
-<p>These two viewpoints are logically equivalent. Viewpoint A is more concise and intuitive, while Viewpoint B is more explicit and constructive. In the following sections, we will use this local linearization to find the area of <span class="math inline">T(R)</span>.</p>
+<p><br> These two viewpoints are logically equivalent. Viewpoint A is more concise and intuitive, while Viewpoint B is more explicit and constructive. In the following sections, we will use this local linearization to find the area of <span class="math inline">T(R)</span>.</p>
 <hr>
 </section>
 </section>
 </section>
-<section id="sec-edge-vectors" class="level2 page-columns page-full" data-number="5">
-<h2 data-number="5" class="anchored" data-anchor-id="sec-edge-vectors"><span class="header-section-number">5</span> <strong>Image of a small rectangle: Edge vectors</strong></h2>
+<section id="sec-edge-vectors" class="level2 page-columns page-full" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="sec-edge-vectors"><span class="header-section-number">4</span> <strong>Image of a small rectangle: Edge vectors</strong></h2>
 <p>The edges of <span class="math inline">R</span> emanating from <span class="math inline">(u_0, v_0)</span> map to vectors in <span class="math inline">\mathbb{R}^2</span>:</p>
 <p><span class="math display">
 \begin{aligned}
@@ -516,19 +533,19 @@ Tip
 </div>
 <hr>
 </section>
-<section id="sec-linear-approximation-area" class="level2" data-number="6">
-<h2 data-number="6" class="anchored" data-anchor-id="sec-linear-approximation-area"><span class="header-section-number">6</span> <strong>Area of the linear approximation</strong></h2>
+<section id="sec-linear-approximation-area" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="sec-linear-approximation-area"><span class="header-section-number">5</span> <strong>Area of the linear approximation</strong></h2>
 <p>Ignoring remainders (<span class="math inline">\mathbf{r}_1 = \mathbf{r}_2 = \mathbf{0}</span>), <span class="math inline">T(R)</span> approximates a parallelogram spanned by <span class="math inline">\mathbf{T}_u \Delta u</span> and <span class="math inline">\mathbf{T}_v \Delta v</span>.</p>
 <p>Using the fact that the <strong>determinant of a</strong> <span class="math inline">(2 \times 2)</span> <strong>matrix is the signed area</strong> of the parallelogram formed by its column vectors (and its absolute value gives the actual area), we obtain:</p>
 <p><span class="math display">
 \det \begin{bmatrix} \mathbf{T}_u \Delta u &amp; \mathbf{T}_v \Delta v \end{bmatrix} = \det \left( DT(u_0,v_0) \begin{pmatrix} \Delta u &amp; 0 \\ 0 &amp; \Delta v \end{pmatrix} \right) = \det(DT(u_0,v_0)) \cdot \Delta u  \Delta v.
 </span></p>
-<p><strong>Crucially, this linear approximation becomes exact in the limit</strong> because differentiability (<a href="#sec-local-linearization" class="quarto-xref">Section&nbsp;4</a>) forces the remainder vectors <span class="math inline">\mathbf{r}_1, \mathbf{r}_2 \to \mathbf{0}</span> faster than <span class="math inline">\Delta u, \Delta v \to 0</span>. We now quantify this rigorously.</p>
+<p><strong>Crucially, this linear approximation becomes exact in the limit</strong> because differentiability (<a href="#sec-local-linearization" class="quarto-xref">Section&nbsp;3</a>) forces the remainder vectors <span class="math inline">\mathbf{r}_1, \mathbf{r}_2 \to \mathbf{0}</span> faster than <span class="math inline">\Delta u, \Delta v \to 0</span>. We now quantify this rigorously.</p>
 <hr>
 </section>
-<section id="sec-error-analysis" class="level2" data-number="7">
-<h2 data-number="7" class="anchored" data-anchor-id="sec-error-analysis"><span class="header-section-number">7</span> <strong>Rigorous error analysis for area approximation</strong></h2>
-<p>The exact signed area of <span class="math inline">T(R)</span> is the determinant of the edge vectors <span class="math inline">\mathbf{a}</span> and <span class="math inline">\mathbf{b}</span> (<a href="#sec-edge-vectors" class="quarto-xref">Section&nbsp;5</a>):</p>
+<section id="sec-error-analysis" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="sec-error-analysis"><span class="header-section-number">6</span> <strong>Rigorous error analysis for area approximation</strong></h2>
+<p>The exact signed area of <span class="math inline">T(R)</span> is the determinant of the edge vectors <span class="math inline">\mathbf{a}</span> and <span class="math inline">\mathbf{b}</span> (<a href="#sec-edge-vectors" class="quarto-xref">Section&nbsp;4</a>):</p>
 <p><span class="math display">
 \det \begin{bmatrix} \mathbf{a} &amp; \mathbf{b} \end{bmatrix} = \det \begin{bmatrix} \mathbf{T}_u \Delta u + \mathbf{r}_1 &amp; \mathbf{T}_v \Delta v + \mathbf{r}_2 \end{bmatrix}.
 </span></p>
@@ -553,9 +570,9 @@ E = \det \begin{bmatrix} \mathbf{r}_1 &amp; \mathbf{T}_v \Delta v \end{bmatrix} 
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href=""><strong>Proof using Little-o Notation</strong></a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href=""><strong>Proof using Epsilon-Delta Bounds</strong></a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<p><strong>By differentiability (<a href="#sec-local-linearization" class="quarto-xref">Section&nbsp;4</a>):</strong><br>
+<p><strong>By differentiability (<a href="#sec-local-linearization" class="quarto-xref">Section&nbsp;3</a>):</strong><br>
 - <span class="math inline">\mathbf{r}(\Delta u, \Delta v) = o\left(\sqrt{(\Delta u)^2 + (\Delta v)^2}\right)</span> as <span class="math inline">(\Delta u, \Delta v) \to (0,0)</span>.<br>
-- For the edge remainders (<a href="#sec-edge-vectors" class="quarto-xref">Section&nbsp;5</a>), this implies:<br>
+- For the edge remainders (<a href="#sec-edge-vectors" class="quarto-xref">Section&nbsp;4</a>), this implies:<br>
 <span class="math display">
   \|\mathbf{r}_1\| = \|\mathbf{r}(\Delta u, 0)\| = o(|\Delta u|), \quad \|\mathbf{r}_2\| = \|\mathbf{r}(0, \Delta v)\| = o(|\Delta v|).
   </span><br>
@@ -619,9 +636,9 @@ Thus:<br>
 </div>
 <hr>
 </section>
-<section id="sec-global-formula" class="level2" data-number="8">
-<h2 data-number="8" class="anchored" data-anchor-id="sec-global-formula"><span class="header-section-number">8</span> <strong>From local to global: The change of variables formula</strong></h2>
-<p>Partition <span class="math inline">S \subset U</span> into small rectangles <span class="math inline">R_{ij}</span>. By our local analysis (<a href="#sec-error-analysis" class="quarto-xref">Section&nbsp;7</a>), the area of <span class="math inline">T(R_{ij})</span> is <span class="math inline">\left| \det(DT(u_i,v_j)) \right| \Delta u  \Delta v + o(\Delta u \Delta v)</span>. Summing over all rectangles and taking the limit as the partition refines:</p>
+<section id="sec-global-formula" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="sec-global-formula"><span class="header-section-number">7</span> <strong>From local to global: The change of variables formula</strong></h2>
+<p>Partition <span class="math inline">S \subset U</span> into small rectangles <span class="math inline">R_{ij}</span>. By our local analysis (<a href="#sec-error-analysis" class="quarto-xref">Section&nbsp;6</a>), the area of <span class="math inline">T(R_{ij})</span> is <span class="math inline">\left| \det(DT(u_i,v_j)) \right| \Delta u  \Delta v + o(\Delta u \Delta v)</span>. Summing over all rectangles and taking the limit as the partition refines:</p>
 <p><span class="math display">
 \text{Area}(T(S)) = \lim_{\max \Delta u, \Delta v \to 0} \sum_{i,j} \text{Area}(T(R_{ij})) = \iint_S \left| \det(DT(u,v)) \right|  du  dv.
 </span></p>
@@ -633,17 +650,17 @@ Thus:<br>
 </span></p>
 <hr>
 </section>
-<section id="sec-essential-conditions" class="level2" data-number="9">
-<h2 data-number="9" class="anchored" data-anchor-id="sec-essential-conditions"><span class="header-section-number">9</span> <strong>Essential Conditions for Validity</strong></h2>
+<section id="sec-essential-conditions" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="sec-essential-conditions"><span class="header-section-number">8</span> <strong>Essential Conditions for Validity</strong></h2>
 <p>The change of variables formula requires two conditions to ensure the Jacobian accurately captures local area scaling:</p>
-<section id="injectivity" class="level3" data-number="9.1">
-<h3 data-number="9.1" class="anchored" data-anchor-id="injectivity"><span class="header-section-number">9.1</span> <strong>1. Injectivity</strong></h3>
+<section id="injectivity" class="level3" data-number="8.1">
+<h3 data-number="8.1" class="anchored" data-anchor-id="injectivity"><span class="header-section-number">8.1</span> <strong>1. Injectivity</strong></h3>
 <p><span class="math inline">T</span> must be <strong>one-to-one</strong> on <span class="math inline">S</span>: distinct points in <span class="math inline">S</span> map to distinct points in <span class="math inline">T(S)</span>.<br>
 - <strong>Why?</strong> Non-injective maps <em>fold</em> the domain, causing overcounting in integrals.<br>
 - <strong>Workaround:</strong> Partition <span class="math inline">S</span> into regions where <span class="math inline">T</span> <em>is</em> injective and apply the formula piecewise.</p>
 </section>
-<section id="non-singular" class="level3" data-number="9.2">
-<h3 data-number="9.2" class="anchored" data-anchor-id="non-singular"><span class="header-section-number">9.2</span> <strong>2. Non-Singular Jacobian</strong></h3>
+<section id="non-singular" class="level3" data-number="8.2">
+<h3 data-number="8.2" class="anchored" data-anchor-id="non-singular"><span class="header-section-number">8.2</span> <strong>2. Non-Singular Jacobian</strong></h3>
 <p><span class="math inline">\det(DT) \neq 0</span> <strong>almost everywhere</strong> on <span class="math inline">S</span> (i.e., except on sets of <strong>measure zero</strong>).</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -666,8 +683,8 @@ Note
 <li><strong>Key point</strong>: Sets of measure zero do not affect integrals, so vanishing Jacobians there are harmless.</li>
 </ul>
 </section>
-<section id="key-takeaway" class="level3" data-number="9.3">
-<h3 data-number="9.3" class="anchored" data-anchor-id="key-takeaway"><span class="header-section-number">9.3</span> <strong>Formula Validity</strong></h3>
+<section id="key-takeaway" class="level3" data-number="8.3">
+<h3 data-number="8.3" class="anchored" data-anchor-id="key-takeaway"><span class="header-section-number">8.3</span> <strong>Formula Validity</strong></h3>
 <p>The formula<br>
 <span class="math display">
 \iint_{T(S)} f(x,y)  dx  dy
@@ -680,8 +697,8 @@ holds when:<br>
 <hr>
 </section>
 </section>
-<section id="sec-examples" class="level2" data-number="10">
-<h2 data-number="10" class="anchored" data-anchor-id="sec-examples"><span class="header-section-number">10</span> <strong>Examples</strong></h2>
+<section id="sec-examples" class="level2" data-number="9">
+<h2 data-number="9" class="anchored" data-anchor-id="sec-examples"><span class="header-section-number">9</span> <strong>Examples</strong></h2>
 <ol type="1">
 <li><p><strong>Uniform scaling:</strong> <span class="math inline">T(u,v) = (2u, v)</span>.<br>
 <span class="math display">
@@ -697,13 +714,13 @@ Thus <span class="math inline">dx  dy = |r|  dr  d\theta = r  dr  d\theta</span>
 </ol>
 <hr>
 </section>
-<section id="sec-summary-extension" class="level2" data-number="11">
-<h2 data-number="11" class="anchored" data-anchor-id="sec-summary-extension"><span class="header-section-number">11</span> <strong>Final summary and extension to higher dimensions</strong></h2>
+<section id="sec-summary-extension" class="level2" data-number="10">
+<h2 data-number="10" class="anchored" data-anchor-id="sec-summary-extension"><span class="header-section-number">10</span> <strong>Final summary and extension to higher dimensions</strong></h2>
 <p>For a <span class="math inline">C^1</span> transformation <span class="math inline">T: (u,v) \mapsto (x,y)</span> with almost non-singular Jacobian (<span class="math inline">\det(DT) \neq 0</span>) on <span class="math inline">S</span>:</p>
 <p><span class="math display">
 \boxed{ dx  dy = \left| \det \begin{pmatrix} \partial x/\partial u &amp; \partial x/\partial v \\ \partial y/\partial u &amp; \partial y/\partial v \end{pmatrix} \right| du  dv }
 </span></p>
-<p><strong>This is the foundation of the change of variables formula.</strong> The absolute value of the Jacobian determinant universally quantifies how <span class="math inline">T</span> distorts infinitesimal areas. Rigorous justification requires <span class="math inline">C^1</span> smoothness to control linearization errors, as shown in <a href="#sec-error-analysis" class="quarto-xref">Section&nbsp;7</a>.</p>
+<p><strong>This is the foundation of the change of variables formula.</strong> The absolute value of the Jacobian determinant universally quantifies how <span class="math inline">T</span> distorts infinitesimal areas. Rigorous justification requires <span class="math inline">C^1</span> smoothness to control linearization errors, as shown in <a href="#sec-error-analysis" class="quarto-xref">Section&nbsp;6</a>.</p>
 <hr>
 <p><strong>Crucially, this entire framework scales seamlessly to higher dimensions.</strong> For a <span class="math inline">C^1</span> transformation <span class="math inline">T: \mathbb{R}^n \to \mathbb{R}^n</span> defined by <span class="math inline">T(u_1, \dots, u_n) = (x_1, \dots, x_n)</span>, the Jacobian matrix <span class="math inline">DT</span> becomes an <span class="math inline">n \times n</span> matrix of partial derivatives:</p>
 <p><span class="math display">
@@ -716,7 +733,7 @@ DT = \begin{pmatrix}
 <p>The <strong>absolute value of its determinant</strong>, <span class="math inline">|\det(DT)|</span>, serves as the <em>local volume scaling factor</em> for infinitesimal <span class="math inline">n</span>-dimensional cubes. This is because:<br>
 1. <strong>Linear approximation:</strong> Near any point, <span class="math inline">T</span> is approximated by the linear map <span class="math inline">DT</span>.<br>
 2. <strong>Volume scaling:</strong> The determinant <span class="math inline">\det(DT)</span> gives the signed volume of the parallelepiped spanned by the column vectors of <span class="math inline">DT</span> (the images of the unit coordinate vectors).<br>
-3. <strong>Error control:</strong> Differentiability ensures nonlinear errors vanish faster than the volume element <span class="math inline">du_1 \cdots du_n</span> as the partition refines, exactly as in the <span class="math inline">\mathbb{R}^2</span> case (<a href="#sec-error-analysis" class="quarto-xref">Section&nbsp;7</a>).</p>
+3. <strong>Error control:</strong> Differentiability ensures nonlinear errors vanish faster than the volume element <span class="math inline">du_1 \cdots du_n</span> as the partition refines, exactly as in the <span class="math inline">\mathbb{R}^2</span> case (<a href="#sec-error-analysis" class="quarto-xref">Section&nbsp;6</a>).</p>
 <p>Consequently, the change of variables formula generalizes to:</p>
 <p><span class="math display">
 \int_{T(S)} f(\mathbf{x})  d\mathbf{x} = \int_S f(T(\mathbf{u})) \left| \det(DT(\mathbf{u})) \right|  d\mathbf{u},
