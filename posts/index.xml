@@ -9,7 +9,14 @@
 <link>https://naifmersal.github.io/posts/</link>
 <atom:link href="https://naifmersal.github.io/posts/index.xml" rel="self" type="application/rss+xml"/>
 <description>Mathematics, AI, and optimization; notes, experiments, and projects</description>
+<image>
+<url>https://naifmersal.github.io/logo.png</url>
+<title>Naif Mersal</title>
+<link>https://naifmersal.github.io/posts/</link>
+<height>144</height>
+<width>144</width>
+</image>
 <generator>quarto-1.8.25</generator>
-<lastBuildDate>Wed, 19 Nov 2025 10:44:39 GMT</lastBuildDate>
+<lastBuildDate>Wed, 19 Nov 2025 10:50:52 GMT</lastBuildDate>
 </channel>
 </rss>
