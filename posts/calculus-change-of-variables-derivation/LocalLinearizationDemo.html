@@ -65,7 +65,6 @@
     </style>
 </head>
 <body>
-    <!-- START: SEO & Accessibility Content -->
     <script type="application/ld+json">
     {
     "@context": "https://schema.org",
@@ -91,7 +90,6 @@
     (given by the Jacobian matrix) near a point (u₀,v₀). Users can adjust u₀, v₀, Δu, and Δv 
     to see how a rectangle in the uv-plane maps to a parallelogram in the xy-plane under the transformation.
     </div>
-    <!-- END: SEO & Accessibility Content -->
     <div class="container">
         <div class="plot" id="uv-plane">
             <div class="plot-title">(u,v) plane - S</div>
@@ -153,9 +151,7 @@
         let v0 = 0.1;
         let du = 0.1;
         let dv = 0.1;
-        let showGrid = false;
         
-        // **MODIFICATION 1: Add epsilon for zero-checking**
         const epsilon = 1e-9;
 
         // Set up SVG dimensions and scales
@@ -202,7 +198,6 @@
 
         // Function to update the visualization
         function updateVisualization() {
-            // **MODIFICATION 2: Add zero-check flags**
             const isDuZero = du < epsilon;
             const isDvZero = dv < epsilon;
             const isPoint = isDuZero && isDvZero;
@@ -215,39 +210,51 @@
             connectionLines.selectAll("*").remove();
 
             // ---- (u,v) plane ----
-            // Draw blob shape
-            const t = d3.range(0, 2 * Math.PI, 0.05);
-            const blobData = t.map(angle => {
-                const r = 1.5 + 0.3 * Math.sin(3 * angle);
-                return {
-                    x: r * Math.cos(angle),
-                    y: r * Math.sin(angle)
-                };
-            });
+            // **MODIFIED: Draw Rectangle shape instead of Blob**
+            // We create a path of points around the rectangle so it transforms smoothly
+            const s_uMin = -2, s_uMax = 1.8;
+            const s_vMin = -1.2, s_vMax = 1.2;
+            const s_steps = 50; // Points per side for smooth transformation
+            let shapeData = [];
+
+            // Bottom edge
+            for(let i=0; i<s_steps; i++) { 
+                shapeData.push({x: s_uMin + (s_uMax-s_uMin)*(i/s_steps), y: s_vMin}); 
+            }
+            // Right edge
+            for(let i=0; i<s_steps; i++) { 
+                shapeData.push({x: s_uMax, y: s_vMin + (s_vMax-s_vMin)*(i/s_steps)}); 
+            }
+            // Top edge
+            for(let i=0; i<s_steps; i++) { 
+                shapeData.push({x: s_uMax - (s_uMax-s_uMin)*(i/s_steps), y: s_vMax}); 
+            }
+            // Left edge
+            for(let i=0; i<s_steps; i++) { 
+                shapeData.push({x: s_uMin, y: s_vMax - (s_vMax-s_vMin)*(i/s_steps)}); 
+            }
+            shapeData.push(shapeData[0]); // Close loop
             
             svgUV.append("path")
-                .datum(blobData)
+                .datum(shapeData)
                 .attr("d", d3.line()
                     .x(d => scaleUV(d.x))
-                    .y(d => scaleUV(d.y)) // Note: Using same scale for y, as in original
+                    .y(d => scaleUV(d.y))
                 )
                 .attr("fill", "#d0e1f9")
                 .attr("stroke", "black")
                 .attr("stroke-width", 1.2)
                 .attr("fill-rule", "evenodd");
 
-            // **MODIFICATION 3: Draw R as rect, line, or point**
+            // Draw R (the small interaction rectangle)
             if (isPoint) {
-                // Draw as a point
                 svgUV.append("circle")
                     .attr("cx", scaleUV(u0))
                     .attr("cy", scaleUV(v0))
                     .attr("r", 2)
                     .attr("fill", "blue")
-                    .attr("stroke", "blue")
-                    // .attr("stroke-width", 1.2);
+                    .attr("stroke", "blue");
             } else if (isDuZero) {
-                // Draw as vertical line
                 svgUV.append("line")
                     .attr("x1", scaleUV(u0))
                     .attr("y1", scaleUV(v0))
@@ -257,7 +264,6 @@
                     .attr("stroke-width", 1.5)
                     .attr("stroke-dasharray", "5,5");
             } else if (isDvZero) {
-                // Draw as horizontal line
                 svgUV.append("line")
                     .attr("x1", scaleUV(u0))
                     .attr("y1", scaleUV(v0))
@@ -267,7 +273,6 @@
                     .attr("stroke-width", 1.5)
                     .attr("stroke-dasharray", "5,5");
             } else {
-                // Draw as rectangle
                 svgUV.append("rect")
                     .attr("x", scaleUV(u0))
                     .attr("y", scaleUV(v0))
@@ -286,14 +291,12 @@
                 .attr("y", 20)
                 .attr("text-anchor", "middle")
                 .attr("font-weight", "bold")
-                .text("S");
+                .text("S (Rectangle)");
 
             // ---- Zoom R ----
-            // These will be used for connection lines
             let rect_x, rect_y, display_width, display_height;
 
             if (isPoint) {
-                // **MODIFICATION 4a: Draw point if R is a point**
                 rect_x = plotWidth / 2;
                 rect_y = plotHeight / 2;
                 display_width = 0;
@@ -314,12 +317,11 @@
                     .text("R = (u₀,v₀)");
 
             } else {
-                // **MODIFICATION 4b: Draw rect/line if R is rect/line**
                 const zoomRAvailWidth = plotWidth - margin.left - margin.right;
                 const zoomRAvailHeight = plotHeight - margin.top - margin.bottom;
-                const max_pixel_width = zoomRAvailWidth * 0.8; // Use 80% of space
+                const max_pixel_width = zoomRAvailWidth * 0.8;
                 const max_pixel_height = zoomRAvailHeight * 0.8;
-                const min_pixel_thickness = 2.0; // Min size for a "line"
+                const min_pixel_thickness = 2.0;
                 
                 if (isDvZero) {
                     display_width = max_pixel_width;
@@ -343,7 +345,6 @@
                 rect_x = (plotWidth / 2) - (display_width / 2);
                 rect_y = (plotHeight / 2) - (display_height / 2);
                     
-                // Draw centered rectangle
                 svgZoomR.append("rect")
                     .attr("x", rect_x)
                     .attr("y", rect_y)
@@ -354,7 +355,6 @@
                     .attr("stroke-width", 1.0)
                     .attr("opacity", 0.8);
 
-                // Add labels relative to the new centered rect
                 svgZoomR.append("text")
                     .attr("x", rect_x + display_width / 2)
                     .attr("y", rect_y + display_height / 2)
@@ -365,25 +365,25 @@
                     
                 svgZoomR.append("text")
                     .attr("x", rect_x + display_width / 2)
-                    .attr("y", rect_y - 15) // 15px above rect
+                    .attr("y", rect_y - 15)
                     .attr("text-anchor", "middle")
                     .attr("dominant-baseline", "hanging")
                     .attr("font-size", "12px")
                     .attr("fill", "blue")
-                    .text(isDuZero ? "" : "Δu"); // Don't show if zero
+                    .text(isDuZero ? "" : "Δu");
                     
                 svgZoomR.append("text")
-                    .attr("x", rect_x - 5) // 5px left of rect
+                    .attr("x", rect_x - 5)
                     .attr("y", rect_y + display_height / 2)
                     .attr("text-anchor", "end")
                     .attr("dominant-baseline", "middle")
                     .attr("font-size", "12px")
                     .attr("fill", "blue")
-                    .text(isDvZero ? "" : "Δv"); // Don't show if zero
+                    .text(isDvZero ? "" : "Δv");
                     
                 svgZoomR.append("text")
                     .attr("x", rect_x -30)
-                    .attr("y", rect_y - 15) // 15px above top-left corner
+                    .attr("y", rect_y - 15)
                     .attr("text-anchor", "start")
                     .attr("dominant-baseline", "hanging")
                     .attr("font-size", "12px")
@@ -392,21 +392,14 @@
             }
 
             // ---- (x,y) plane ----
-            // Draw transformed blob shape
-            const blobData2 = t.map(angle => {
-                const r = 1.5 + 0.3 * Math.sin(3 * angle + 0.8);
-                const point = {
-                    x: 1.1 * r * Math.cos(angle + 0.3),
-                    y: 0.8 * r * Math.sin(angle)
-                };
-                return T(point.x, point.y);
-            });
+            // **MODIFIED: Transform the Rectangle Shape**
+            const transformedShapeData = shapeData.map(p => T(p.x, p.y));
             
             svgXY.append("path")
-                .datum(blobData2)
+                .datum(transformedShapeData)
                 .attr("d", d3.line()
                     .x(d => scaleXY(d.x))
-                    .y(d => scaleXY(d.y)) // Note: Using same scale for y
+                    .y(d => scaleXY(d.y))
                 )
                 .attr("fill", "#fddbc7")
                 .attr("stroke", "black")
@@ -415,23 +408,16 @@
 
             // Draw transformed rectangle T(R)
             const nu = 25, nv = 25;
-            // **MODIFICATION 5: Robust range generation**
             const uVals = d3.range(nu + 1).map(i => u0 + (i / nu) * du);
             const vVals = d3.range(nv + 1).map(i => v0 + (i / nv) * dv);
             
-            // Bottom edge
             const bottom = uVals.map(u => T(u, v0));
-            // Top edge
             const top = [...uVals].reverse().map(u => T(u, v0 + dv));
-            // Right edge
             const right = vVals.map(v => T(u0 + du, v));
-            // Left edge
             const left = [...vVals].reverse().map(v => T(u0, v));
             
-            // Combine all edges
             const tRData = [...bottom, ...right, ...top, ...left];
             
-            // **MODIFICATION 6: Draw T(R) as path, line, or point**
             if (isPoint) {
                 const origin = T(u0, v0);
                 svgXY.append("circle")
@@ -444,9 +430,8 @@
                     .datum(tRData)
                     .attr("d", d3.line()
                         .x(d => scaleXY(d.x))
-                        .y(d => scaleXY(d.y)) // Note: Using same scale for y
+                        .y(d => scaleXY(d.y))
                     )
-                    // **MODIFICATION 7: No fill if it's just a line**
                     .attr("fill", (isDuZero || isDvZero) ? "none" : "#f4a582")
                     .attr("stroke", "darkred")
                     .attr("stroke-width", 1.2)
@@ -459,19 +444,16 @@
                 .attr("y", 20)
                 .attr("text-anchor", "middle")
                 .attr("font-weight", "bold")
-                .text("T(S)");
+                .text("B=T(S)");
 
             // ---- Zoom T(R) ----
-            // Calculate linear approximation using Jacobian
             const J = jacobian(u0, v0);
             const origin = T(u0, v0);
             
-            // Corners in UV space
             const cornersUV = [
                 [0, 0], [du, 0], [du, dv], [0, dv]
             ];
             
-            // Transform corners using Jacobian
             const mappedLinearCorners = cornersUV.map(corner => {
                 const [du_val, dv_val] = corner;
                 return {
@@ -480,11 +462,8 @@
                 };
             });
             
-            // Close the polygon
             mappedLinearCorners.push(mappedLinearCorners[0]);
             
-            // Determine bounds for zoom T
-            // This logic works fine even for points/lines, as min/max will be close
             const allX = [...tRData.map(d => d.x), ...mappedLinearCorners.map(d => d.x)];
             const allY = [...tRData.map(d => d.y), ...mappedLinearCorners.map(d => d.y)];
             
@@ -493,16 +472,14 @@
             const minY = Math.min(...allY) - 0.05;
             const maxY = Math.max(...allY) + 0.05;
             
-            // Set up zoom scale for T(R)
             const scaleZoomT = d3.scaleLinear()
                 .domain([minX, maxX])
                 .range([margin.left, plotWidth - margin.right]);
                 
             const scaleZoomTY = d3.scaleLinear()
                 .domain([minY, maxY])
-                .range([margin.top, plotHeight - margin.bottom]); // Use height range
+                .range([margin.top, plotHeight - margin.bottom]);
 
-            // **MODIFICATION 8: Draw T(R) as path, line, or point in Zoom**
             if (isPoint) {
                 svgZoomT.append("circle")
                     .attr("cx", scaleZoomT(origin.x))
@@ -518,20 +495,17 @@
                     .attr("fill", "darkred")
                     .text("T(R) = T(u₀,v₀)");
             } else {
-                // Draw transformed region T(R)
                 svgZoomT.append("path")
-                    .datum([...tRData, tRData[0]]) // Close the polygon
+                    .datum([...tRData, tRData[0]])
                     .attr("d", d3.line()
                         .x(d => scaleZoomT(d.x))
                         .y(d => scaleZoomTY(d.y))
                     )
-                    // **MODIFICATION 9: No fill if it's just a line**
                     .attr("fill", (isDuZero || isDvZero) ? "none" : "#fddbc7")
                     .attr("stroke", "orange")
                     .attr("stroke-width", 1.5)
                     .attr("opacity", 0.8);
 
-                // Draw linear approximation
                 svgZoomT.append("path")
                     .datum(mappedLinearCorners)
                     .attr("d", d3.line()
@@ -543,7 +517,6 @@
                     .attr("stroke-width", 1.5)
                     .attr("stroke-dasharray", "5,5");
 
-                // Add labels for linear approximation corners
                 const labels = [
                     { text: "T(u₀,v₀)", anchor: "end", baseline: "hanging" },
                     { text: "T(u₀+Δu, v₀)", anchor: "start", baseline: "hanging" },
@@ -565,17 +538,14 @@
             }
 
             // ---- Connection lines ----
-            // Get plot positions in the overall layout
             const uvPlotRect = document.getElementById("uv-plane").getBoundingClientRect();
             const zoomRPlotRect = document.getElementById("zoom-r").getBoundingClientRect();
             const xyPlotRect = document.getElementById("xy-plane").getBoundingClientRect();
             const zoomTPlotRect = document.getElementById("zoom-t").getBoundingClientRect();
 
-            // **MODIFICATION 10: Connection lines for point or rect/line**
             if (isPoint) {
-                // Connect the single points
                 const uvScreen = { x: scaleUV(u0), y: scaleUV(v0) };
-                const zoomRScreen = { x: rect_x, y: rect_y }; // From Zoom R calc
+                const zoomRScreen = { x: rect_x, y: rect_y };
                 const xyScreen = { x: scaleXY(origin.x), y: scaleXY(origin.y) };
                 const zoomTScreen = { x: scaleZoomT(origin.x), y: scaleZoomTY(origin.y) };
 
@@ -600,17 +570,14 @@
                     .attr("opacity", 0.8);
 
             } else {
-                // Original logic for connecting corners
-                const p_uv_tl = { x: u0, y: v0 }; // Top-left
-                const p_uv_tr = { x: u0 + du, y: v0 }; // Top-right
-                const p_xy_tl = T(u0, v0); // Transformed Top-left
-                const p_xy_tr = T(u0 + du, v0); // Transformed Top-right
+                const p_uv_tl = { x: u0, y: v0 };
+                const p_uv_tr = { x: u0 + du, y: v0 };
+                const p_xy_tl = T(u0, v0);
+                const p_xy_tr = T(u0 + du, v0);
                 
-                // Get positions in screen coordinates
                 const uvScreenTL = { x: scaleUV(p_uv_tl.x), y: scaleUV(p_uv_tl.y) };
                 const uvScreenTR = { x: scaleUV(p_uv_tr.x), y: scaleUV(p_uv_tr.y) };
                 
-                // Map to centered rect's top corners
                 const zoomRScreenTL = { x: rect_x, y: rect_y };
                 const zoomRScreenTR = { x: rect_x + display_width, y: rect_y };
                 
@@ -620,7 +587,6 @@
                 const zoomTScreenTL = { x: scaleZoomT(p_xy_tl.x), y: scaleZoomTY(p_xy_tl.y) };
                 const zoomTScreenTR = { x: scaleZoomT(p_xy_tr.x), y: scaleZoomTY(p_xy_tr.y) };
                 
-                // Draw connection lines between UV and Zoom R
                 connectionLines.append("line")
                     .attr("x1", uvPlotRect.left + uvScreenTL.x)
                     .attr("y1", uvPlotRect.top + uvScreenTL.y)
@@ -641,7 +607,6 @@
                     .attr("stroke-dasharray", "5,5")
                     .attr("opacity", 0.8);
                 
-                // Draw connection lines between XY and Zoom T
                 connectionLines.append("line")
                     .attr("x1", xyPlotRect.left + xyScreenTL.x)
                     .attr("y1", xyPlotRect.top + xyScreenTL.y)

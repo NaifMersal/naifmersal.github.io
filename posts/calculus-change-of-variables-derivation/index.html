@@ -395,9 +395,12 @@ But <strong>what happens to the area element <span class="math inline">dx  dy</s
 </section>
 <section id="the-transformation-warps-area" class="level3" data-number="1.2">
 <h3 data-number="1.2" class="anchored" data-anchor-id="the-transformation-warps-area"><span class="header-section-number">1.2</span> <strong>The transformation warps area</strong></h3>
-<p>Under <span class="math inline">T</span>, our partition of <span class="math inline">S</span> (in <span class="math inline">uv</span>-coordinates) maps to a partition of <span class="math inline">D</span>:<br>
-- A tiny rectangle <span class="math inline">R = [u_0, u_0+\Delta u] \times [v_0, v_0+\Delta v]</span> in <span class="math inline">S</span> (area <span class="math inline">= \Delta u  \Delta v</span>),<br>
-- Maps to a <em>curved patch</em> <span class="math inline">T(R)</span> in <span class="math inline">D</span> (area <span class="math inline">\neq \Delta u  \Delta v</span>). See the figure:</p>
+<p>Under <span class="math inline">T</span>, our partition of <span class="math inline">S</span> (in <span class="math inline">uv</span>-coordinates) maps to a partition of <span class="math inline">D</span>:</p>
+<ul>
+<li>A tiny rectangle <span class="math inline">R = [u_0, u_0+\Delta u] \times [v_0, v_0+\Delta v]</span> in <span class="math inline">S</span> (area <span class="math inline">= \Delta u  \Delta v</span>),<br>
+</li>
+<li>Maps to a <em>curved patch</em> <span class="math inline">T(R)</span> in <span class="math inline">D</span> (area <span class="math inline">\neq \Delta u  \Delta v</span>). See the figure:</li>
+</ul>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="transformation_diagram.webp" class="img-fluid figure-img"></p>
@@ -520,15 +523,11 @@ Tip
 </div>
 <div class="callout-body-container callout-body">
 <p><strong>Interactive Figure: Local Linearization in Action (<a href="LocalLinearizationDemo.html" target="_blank" rel="noopener">click to open in a new tab</a>)</strong></p>
-<blockquote class="blockquote">
-<p><em>Drag the handles or adjust the parameters (<span class="math inline">u_0</span>, <span class="math inline">v_0</span>, <span class="math inline">\Delta u</span>, <span class="math inline">\Delta v</span>) to see how the transformation <span class="math inline">T</span> distorts the rectangle <span class="math inline">R</span>.</em></p>
-</blockquote>
-<blockquote class="blockquote">
-<p>Observe how <span class="math inline">T(R)</span> <strong>approaches a parallelogram</strong> as <span class="math inline">\Delta u, \Delta v \to 0</span> — note that “approaches 0” means <em>gets smaller</em>, not <em>equals 0</em>.</p>
-</blockquote>
-<blockquote class="blockquote">
-<p>See the edge vectors <span class="math inline">\mathbf{a} = T(u_0+\Delta u,v_0) - T(u_0,v_0)</span> and <span class="math inline">\mathbf{b} = T(u_0,v_0+\Delta v) - T(u_0,v_0)</span></p>
-</blockquote>
+<ul>
+<li><p><em>Drag the handles or adjust the parameters (<span class="math inline">u_0</span>, <span class="math inline">v_0</span>, <span class="math inline">\Delta u</span>, <span class="math inline">\Delta v</span>) to see how the transformation <span class="math inline">T</span> distorts the rectangle <span class="math inline">R</span>.</em></p></li>
+<li><p>Observe how <span class="math inline">T(R)</span> <strong>approaches a parallelogram</strong> as <span class="math inline">\Delta u, \Delta v \to 0</span> — note that “approaches 0” means <em>gets smaller</em>, not <em>equals 0</em>.</p></li>
+<li><p>See the edge vectors <span class="math inline">\mathbf{a} = T(u_0+\Delta u,v_0) - T(u_0,v_0)</span> and <span class="math inline">\mathbf{b} = T(u_0,v_0+\Delta v) - T(u_0,v_0)</span></p></li>
+</ul>
 </div>
 </div>
 <hr>
