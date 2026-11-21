@@ -1,0 +1,103 @@
+---
+title-block-style: none
+toc: false
+listing:
+  id: recent-posts
+  contents: "posts/*/index.qmd"
+  sort: "date desc"
+  type: table
+  fields: [date, title]
+  field-display-names:
+    date: " "
+    title: " "
+  date-format: "MMM YYYY"
+  sort-ui: false
+  filter-ui: false
+  max-items: 5
+---
+
+::: {.ink-hero}
+[Naif Mersal]{.ink-mark}
+[نايف المحمادي]{.ink-mark-ar lang="ar" dir="rtl"}
+
+[AI instructor · Efficient inference · Arabic-language AI]{.ink-role}
+:::
+
+I'm interested in the mathematics behind machine learning, in optimization,
+and in efficiency: how small a model can be and still work, and how fast it
+can be served. I'm also interested in Arabic-language AI.
+
+I'm an AI instructor at SDAIA Academy, where I write and teach AI courses:
+800+ contact hours, 1,200+ trainees, from developers to non-technical staff.
+
+## Posts & tutorials
+
+::: {#recent-posts}
+:::
+
+[All posts →](posts/)
+
+## Courses
+
+- **Building Gen AI Apps**: LLM applications end to end: RAG, tool calling,
+  agents, model adaptation, guardrails and deployment.
+- **Computer Vision for Developers**: detection with YOLO, ONNX/TensorRT
+  export, INT8 quantization, real-time pipelines.
+- **Time Series Analysis & Forecasting**: a three-day practical course built
+  on *Forecasting: Principles and Practice*.
+- **Modern Data Engineering** (delivered): DuckDB, dlt, Polars, dbt, Dagster,
+  Iceberg, Spark.
+- **AI at Work**: Arabic workshops on turning repeated work into reusable AI
+  workflows.
+- **Intro to Robotics**: robotics for school students, with interactive
+  browser simulations.
+- **Robot Rockstars**: a five-week robotics bootcamp for WRO RoboMission,
+  LEGO SPIKE Prime programmed in Python.
+
+## Projects
+
+[Arabic Language Modeling](https://github.com/NaifMersal/Arabic-Language-Modeling)
+: N-gram, LSTM, Transformer and Mamba, parameter-matched at ~15M on 6.1 GB of
+  Arabic Wikipedia. Perplexities landed at 93–95: at this scale the
+  architecture barely matters.
+
+[Arabic Legal Assistant](https://github.com/NaifMersal/Legal-assistant)
+: Arabic legal RAG with a hybrid retriever; relational recall@20 from 44% to 58%.
+
+[MFER](https://github.com/NaifMersal/MFER)
+: Multimodal emotion recognition: Emotion2Vec audio features fused with a
+  Vision Transformer, competitive with the state of the art on RAVDESS.
+
+[swift911](https://github.com/NaifMersal/swift911)
+: Voice-based emergency reporting: speech recognition, NLP and an agent that
+  extracts incident details for dispatch.
+
+**Small CNNs**
+: An exploratory search over 100+ compact CNN designs. Models of 0.4M–0.7M
+  parameters reach 60% ImageNet top-1, trained in float16 on a 4 GB GPU.
+
+**LLM serving homelab**
+: 3× RTX 3090. I benchmark llama.cpp, vLLM and ExLlamaV3 across speculative
+  decoding (MTP, n-gram), tensor vs. layer parallelism, and layer offloading.
+
+**CourseOS**
+: A LangGraph multi-agent system for course authoring. Agent drafts reach
+  roughly 60–65% of final quality, then I revise them.
+
+## Background
+
+- **SDAIA Academy**, AI Instructor, 2025–present.
+- **Aramco**, ML Engineer Intern, 2024. Work-order classifier at 94% F1 on a
+  10K-sample maintenance corpus; first place (team) in the internal GenAI
+  ideathon.
+- **University of Jeddah**, BSc Artificial Intelligence, First Class Honors,
+  GPA 4.95 / 5.0.
+- **University of Oxford**, AI Engineering Bootcamp (SDAIA-sponsored), 2025.
+- **NVIDIA-Certified Associate**, Generative AI LLMs and Generative AI
+  Multimodal, 2025.
+
+## Contact
+
+[naifmersal@gmail.com](mailto:naifmersal@gmail.com) ·
+[GitHub](https://github.com/NaifMersal) ·
+[LinkedIn](https://www.linkedin.com/in/naif-al-mehmadi)

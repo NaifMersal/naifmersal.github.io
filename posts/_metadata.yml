@@ -1,0 +1,20 @@
+page-layout: article
+freeze: true
+format:
+  html:
+    css: styles.css
+
+comments:
+  giscus:
+    repo: "NaifMersal/naifmersal.github.io"
+    repo-id: "R_kgDOQXTdlA"
+    mapping: "pathname"
+    category: "Announcements"
+    category-id: "DIC_kwDOQXTdlM4Cx4gJ"
+    reactions-enabled: true
+    input-position: "bottom"
+    theme:
+      light: light
+      dark: dark
+      
+    loading: "lazy"

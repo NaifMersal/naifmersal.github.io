@@ -1,0 +1,9 @@
+# Build output and Quarto cache (GitHub Actions renders the site)
+/_site/
+/.quarto/
+**/*.quarto_ipynb
+
+# Local drafts, never published
+**/ignore/
+editing-mot.md
+note.txt

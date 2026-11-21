@@ -1,0 +1,440 @@
+/*
+  Ink: the reveal.js theme for Naif Mersal's slides.
+
+  GENERATED from brand/tokens.json by scripts/build_brand.py.
+  Do not edit this copy. Edit plugins/ink/templates/slides.scss.tmpl, rebuild,
+  then sync it into the repo with scripts/sync_brand.py.
+
+  Rules this file enforces:
+    * Black type on white, one accent colour. The accent marks one thing per
+      slide: `.accent`, `.card.key`, a link.
+    * Only logical properties (border-inline-start, margin-inline-*), so one
+      stylesheet serves English (LTR) and Arabic (RTL) decks.
+    * Section dividers are the only dark slides in light mode. Mark the
+      heading `.ink-dark`; ink.lua paints the slide background.
+    * Light and night modes. Every colour goes through the --ink-* custom
+      properties, which `html.ink-night` redefines; ink-mode.html (added by
+      ink.lua) sets that class and swaps each figure for its .dark twin.
+      Never write a literal colour or a Sass colour variable in a rule.
+
+  Components: .card (+ .tight .key .ink .outline), .flow / .flow-step /
+  .flow-arrow (+ .t .s, .flow-col), .tile, .ink-mark, .muted, .accent,
+  .code-shrink. Old SDAIA class names are mapped at the bottom so a ported
+  deck renders before it is cleaned up.
+*/
+
+/*-- scss:defaults --*/
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+
+$ink-paper: #FBFBFC;
+$ink-wash: #F1F2F5;
+$ink-rule: #E2E4E9;
+$ink-ink: #16181D;
+$ink-ink2: #4A505C;
+$ink-ink3: #8A909B;
+$ink-accent: #2347C6;
+$ink-accent-on-dark: #8AA4FF;
+$ink-dark-ink2: #A3A8B2;
+
+$body-bg: $ink-paper;
+$body-color: $ink-ink;
+$link-color: $ink-accent;
+$link-color-hover: $ink-ink;
+$selection-bg: mix($ink-accent, $ink-paper, 18%);
+$selection-color: $ink-ink;
+
+$font-family-sans-serif: "IBM Plex Sans", "IBM Plex Sans Arabic", system-ui, -apple-system, "Segoe UI", sans-serif;
+$font-family-monospace: "IBM Plex Mono", ui-monospace, "Cascadia Mono", "Consolas", monospace;
+$presentation-heading-font: "IBM Plex Sans", "IBM Plex Sans Arabic", system-ui, -apple-system, "Segoe UI", sans-serif;
+$presentation-heading-color: $ink-ink;
+$presentation-heading-font-weight: 600;
+$presentation-heading-text-transform: none;
+$presentation-heading-letter-spacing: -0.015em;
+$presentation-heading-line-height: 1.15;
+$presentation-font-size-root: 32px;
+$presentation-line-height: 1.3;
+
+$code-block-bg: $ink-wash;
+$code-block-border-color: $ink-wash;
+$code-color: $ink-ink;
+$code-block-font-size: 0.72em;
+
+$blockquote-border-color: $ink-rule;
+
+$callout-border-width: 3px;
+$callout-color-note: $ink-ink2;
+$callout-color-tip: $ink-ink2;
+$callout-color-info: $ink-ink2;
+$callout-color-caution: $ink-ink;
+$callout-color-warning: $ink-ink;
+$callout-color-important: $ink-accent;
+$callout-color-success: $ink-ink2;
+
+/*-- scss:rules --*/
+:root {
+  --ink-paper: #{$ink-paper};
+  --ink-wash: #{$ink-wash};
+  --ink-rule: #{$ink-rule};
+  --ink-ink: #{$ink-ink};
+  --ink-ink2: #{$ink-ink2};
+  --ink-ink3: #{$ink-ink3};
+  --ink-accent: #{$ink-accent};
+  --ink-key-bg: #{mix($ink-accent, $ink-paper, 7%)};
+  /* Section dividers and thumbnails: dark in both modes. */
+  --ink-divider-bg: #16181D;
+  --ink-divider-fg: #FBFBFC;
+  --ink-divider-fg2: #A3A8B2;
+  --ink-accent-on-dark: #8AA4FF;
+  --ink-tile-r: 3px;
+  --ink-card-r: 6px;
+}
+
+/* Night: the same roles, dark values. Reveal reads its own --r-* variables
+   for the page background, body text, headings and links, so those are
+   redefined too. */
+html.ink-night {
+  --ink-paper: #121418;
+  --ink-wash: #1A1D23;
+  --ink-rule: #2A2E36;
+  --ink-ink: #ECEDEF;
+  --ink-ink2: #A3A8B2;
+  --ink-ink3: #6B717C;
+  --ink-accent: #8AA4FF;
+  --ink-key-bg: #{mix(#8AA4FF, #121418, 12%)};
+  /* A divider must still read as a break against the night page. */
+  --ink-divider-bg: #000000;
+
+  --r-background-color: var(--ink-paper);
+  --r-main-color: var(--ink-ink);
+  --r-heading-color: var(--ink-ink);
+  --r-link-color: var(--ink-accent);
+  --r-link-color-hover: var(--ink-ink);
+  --r-link-color-dark: var(--ink-accent);
+  --r-selection-background-color: #{mix(#8AA4FF, #121418, 30%)};
+  --r-selection-color: var(--ink-ink);
+  color-scheme: dark;
+}
+html.ink-night body,
+html.ink-night .reveal-viewport { background: var(--ink-paper); color: var(--ink-ink); }
+html.ink-night .reveal { color: var(--ink-ink); }
+/* reveal.js paints a divider's colour inline on its background element and
+   reads the data attribute to decide the slide is dark. Keep the attribute
+   (so the footer still switches to light text) and repaint at night. Only
+   dividers carry a background colour in Ink. */
+html.ink-night .reveal .backgrounds .slide-background[style*="background-color"] {
+  background-color: var(--ink-divider-bg) !important;
+}
+html.ink-night .reveal :is(h1, h2, h3, h4, h5, h6) { color: var(--ink-ink); }
+html.ink-night .reveal .katex { color: inherit; }
+
+/* The mode button sits beside Quarto's menu button, bottom-start. */
+.ink-mode-toggle {
+  position: fixed;
+  inset-block-end: 6px;
+  inset-inline-start: 46px;
+  z-index: 40;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink-ink3);
+  cursor: pointer;
+  opacity: 0.7;
+}
+.ink-mode-toggle:hover, .ink-mode-toggle:focus-visible { opacity: 1; color: var(--ink-ink); }
+.ink-mode-toggle:focus-visible { outline: 2px solid var(--ink-accent); }
+.ink-mode-toggle svg { width: 18px; height: 18px; display: block; margin: auto; }
+.ink-mode-toggle .moon { display: block; }
+.ink-mode-toggle .sun { display: none; }
+html.ink-night .ink-mode-toggle .moon { display: none; }
+html.ink-night .ink-mode-toggle .sun { display: block; }
+@media print { .ink-mode-toggle { display: none; } }
+
+/* ---- Type ------------------------------------------------------------- */
+.reveal .slides section { text-align: start; }
+
+.reveal .slides section h1 { font-size: 1.6em; }
+.reveal .slides section h2 { font-size: 1.25em; margin-block-end: 0.6em; }
+.reveal .slides section h3 { font-size: 1.02em; }
+.reveal h1, .reveal h2, .reveal h3 { text-wrap: balance; }
+
+.reveal strong { font-weight: 600; color: var(--ink-ink); }
+.reveal em { font-style: italic; }
+
+/* Arabic: no negative tracking, taller lines. Quarto sets lang/dir on <html>. */
+html[dir="rtl"] .reveal h1,
+html[dir="rtl"] .reveal h2,
+html[dir="rtl"] .reveal h3 { letter-spacing: 0; line-height: 1.4; }
+html[dir="rtl"] .reveal p,
+html[dir="rtl"] .reveal li { line-height: 1.65; }
+html[dir="rtl"] .reveal { font-family: "IBM Plex Sans Arabic", "IBM Plex Sans", "Segoe UI", "Tahoma", sans-serif; }
+
+.reveal .muted { color: var(--ink-ink2); }
+.reveal .accent { color: var(--ink-accent); }
+
+.reveal a {
+  text-decoration: underline;
+  text-decoration-thickness: 0.06em;
+  text-underline-offset: 0.15em;
+}
+
+.reveal ul, .reveal ol { margin-inline-start: 1em; }
+.reveal li::marker { color: var(--ink-ink3); }
+
+/* ---- The tile and the wordmark ---------------------------------------- */
+.reveal .tile {
+  display: inline-block;
+  width: 0.55em;
+  height: 0.55em;
+  border-radius: var(--ink-tile-r);
+  background: var(--ink-accent);
+  vertical-align: 0.05em;
+}
+
+.reveal .ink-mark { font-weight: 600; color: var(--ink-ink); letter-spacing: -0.01em; white-space: nowrap; }
+.reveal .ink-mark::after {
+  content: "";
+  display: inline-block;
+  width: 0.5em;
+  height: 0.5em;
+  margin-inline-start: 0.3em;
+  border-radius: 1px;
+  background: var(--ink-accent);
+}
+
+/* ---- Title slide ------------------------------------------------------ */
+/* Quarto renders the deck title as section.quarto-title-block; level-1
+   headings get .title-slide, so the rules below target the block only. */
+.reveal .slides section.quarto-title-block { text-align: start; }
+.reveal .slides section.quarto-title-block h1.title {
+  margin-block-end: 0;
+  font-size: 2.1em;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+html[dir="rtl"] .reveal .slides section.quarto-title-block h1.title { letter-spacing: 0; line-height: 1.35; }
+.reveal .slides section.quarto-title-block .subtitle {
+  color: var(--ink-ink2);
+  font-weight: 400;
+  font-size: 0.95em;
+  line-height: 1.35;
+  margin-block-start: 0.6em;
+}
+.reveal .slides section.quarto-title-block .quarto-title-authors,
+.reveal .slides section.quarto-title-block .date {
+  color: var(--ink-ink2);
+  font-family: "IBM Plex Mono", ui-monospace, "Cascadia Mono", "Consolas", monospace;
+  font-size: 0.5em;
+}
+.reveal .slides section.quarto-title-block h1.title::after {
+  content: "";
+  display: inline-block;
+  width: 0.28em;
+  height: 0.28em;
+  margin-inline-start: 0.1em;
+  border-radius: 2px;
+  background: var(--ink-accent);
+}
+
+/* ---- Section dividers: the only dark slides --------------------------- */
+.reveal .slides section.ink-dark:not(:has(> section)),
+.reveal .slides section.ink-dark:not(:has(> section)) :is(h1, h2, h3, p, li, span, strong),
+.reveal .slides section.sdaia-dark:not(:has(> section)),
+.reveal .slides section.sdaia-dark:not(:has(> section)) :is(h1, h2, h3, p, li, span, strong) {
+  color: var(--ink-divider-fg) !important;
+}
+.reveal .slides section.ink-dark:not(:has(> section)) h1,
+.reveal .slides section.sdaia-dark:not(:has(> section)) h1 {
+  font-size: 1.9em;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+.reveal .slides section.ink-dark:not(:has(> section)) :is(.muted, .s),
+.reveal .slides section.sdaia-dark:not(:has(> section)) :is(.muted, .s) {
+  color: var(--ink-divider-fg2) !important;
+}
+.reveal .slides section.ink-dark:not(:has(> section)) :is(.accent, a),
+.reveal .slides section.sdaia-dark:not(:has(> section)) :is(.accent, a) {
+  color: var(--ink-accent-on-dark) !important;
+}
+
+/* ---- Footer, number, progress ----------------------------------------- */
+.reveal .footer { font-size: 13px; color: var(--ink-ink2); }
+.reveal .slide-number {
+  background: transparent;
+  color: var(--ink-ink2);
+  font-family: "IBM Plex Mono", ui-monospace, "Cascadia Mono", "Consolas", monospace;
+  font-size: 13px;
+}
+.reveal .progress { color: var(--ink-accent); height: 2px; }
+.reveal.has-dark-background .footer,
+.reveal.has-dark-background .slide-number { color: var(--ink-divider-fg2); }
+.reveal.has-dark-background .footer .ink-mark { color: var(--ink-divider-fg); }
+.reveal.has-dark-background .ink-mark::after { background: var(--ink-accent-on-dark); }
+
+/* ---- Code ------------------------------------------------------------- */
+.reveal div.sourceCode,
+.reveal pre,
+.reveal pre.sourceCode,
+.reveal div.sourceCode pre {
+  background: var(--ink-wash);
+  border: 0;
+  border-radius: var(--ink-card-r);
+  box-shadow: none;
+}
+.reveal pre code { background: transparent; padding: 0.7em 1em; line-height: 1.55; }
+.reveal code:not(pre code) {
+  background: var(--ink-wash);
+  color: var(--ink-ink);
+  padding: 0.05em 0.3em;
+  border-radius: var(--ink-tile-r);
+  font-size: 0.85em;
+}
+/* One accent in code too: keywords and imports. Comments grey, the rest ink.
+   Quarto's highlight theme colours EVERY span (dark teal by default), so the
+   base rule covers all spans; otherwise unclassed tokens vanish at night. */
+.reveal pre code,
+.reveal div.sourceCode code,
+.reveal div.sourceCode code span { color: var(--ink-ink); }
+.reveal div.sourceCode code span:is(.kw, .cf, .im) { color: var(--ink-accent); font-weight: 500; }
+.reveal div.sourceCode code span.co { color: var(--ink-ink2); font-style: italic; }
+/* Line numbers */
+.reveal pre.numberSource code > span > a:first-child::before,
+.reveal .sourceCode .sourceLine::before { color: var(--ink-ink3); }
+
+/* Line highlights (code-line-numbers="|4|9,17"): Quarto fades the other
+   lines to 0.4, which is fine on paper but turns to grey-on-grey at night. */
+.reveal div.sourceCode pre code.has-line-highlights > span:not(.highlight-line) { opacity: 0.5; }
+html.ink-night .reveal div.sourceCode pre code.has-line-highlights > span:not(.highlight-line) { opacity: 0.62; }
+html.ink-night .reveal div.sourceCode code span.co { color: var(--ink-ink2); }
+
+/* reveal.js caps code at 400px and scrolls inside it, which hides the last
+   lines on a slide that has room. Allow most of the slide's height. */
+/* Quarto's own rule is `.reveal pre.sourceCode code { color: <light ink>;
+   max-height: 500px }`, so match its selector to win on both. */
+.reveal pre code,
+.reveal pre.sourceCode code { max-height: 560px; color: var(--ink-ink); }
+
+/* Plex Mono is wide, so shrink less than a narrow mono would need. */
+.reveal .code-shrink pre code { font-size: 0.76em; }
+.reveal .code-shrink code:not(pre code) { font-size: 0.9em; }
+.reveal .code-shrink-xs pre code { font-size: 0.62em; }
+
+/* ---- Tables ----------------------------------------------------------- */
+.reveal table { border-collapse: collapse; font-size: 0.8em; font-variant-numeric: tabular-nums; }
+.reveal table th {
+  font-weight: 600;
+  border-block-end: 1.5px solid var(--ink-ink);
+  padding: 0.35em 0.7em;
+}
+.reveal table td {
+  border-block-end: 1px solid var(--ink-rule);
+  padding: 0.35em 0.7em;
+}
+
+/* ---- Blockquote, callouts --------------------------------------------- */
+.reveal blockquote {
+  width: auto;
+  margin-inline: 0;
+  padding: 0.2em 1em;
+  border-inline-start: 3px solid var(--ink-rule);
+  background: none;
+  box-shadow: none;
+  font-style: normal;
+  color: var(--ink-ink2);
+}
+.reveal .callout { border-radius: var(--ink-card-r); }
+
+/* ---- Cards ------------------------------------------------------------ */
+.reveal .card {
+  background: var(--ink-wash);
+  border: 0;
+  border-radius: var(--ink-card-r);
+  padding: 0.9em 1.15em;
+  text-align: start;
+  margin-block: 0.5em;
+}
+.reveal .card.tight { padding: 0.55em 0.9em; }
+.reveal .card > :first-child { margin-block-start: 0; }
+.reveal .card > :last-child { margin-block-end: 0; }
+
+/* The one card on a slide that carries the point. */
+.reveal .card.key,
+.reveal .card.accent-orange {
+  background: var(--ink-key-bg);
+  border-inline-start: 3px solid var(--ink-accent);
+}
+
+.reveal .card.outline { background: transparent; border: 1px solid var(--ink-rule); }
+
+.reveal .card.ink,
+.reveal .card-dark {
+  background: var(--ink-ink);
+  color: var(--ink-paper);
+  border-radius: var(--ink-card-r);
+  padding: 0.9em 1.15em;
+}
+.reveal :is(.card.ink, .card-dark) :is(p, li, strong, span) { color: var(--ink-paper); }
+.reveal :is(.card.ink, .card-dark) .accent { color: var(--ink-accent-on-dark); }
+
+/* ---- Flow diagrams ---------------------------------------------------- */
+.reveal .flow {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 0.4em;
+  margin-block-start: 1em;
+}
+.reveal .flow-step {
+  flex: 1 1 0;
+  background: var(--ink-wash);
+  border-radius: var(--ink-card-r);
+  padding: 0.9em 0.7em;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.25em;
+}
+.reveal .flow-step.key,
+.reveal .flow-step.accent-orange {
+  background: var(--ink-key-bg);
+  box-shadow: inset 0 0 0 1.5px var(--ink-accent);
+}
+.reveal .flow-step.ink {
+  background: var(--ink-ink);
+}
+.reveal .flow-step.ink :is(.t, .s) { color: var(--ink-paper); }
+
+/* Pandoc wraps a step's spans in <p>; its margins would double the height. */
+.reveal :is(.flow-step, .flow-arrow) > p { margin: 0; }
+
+.reveal .flow-step .t { display: block; font-weight: 600; font-size: 0.88em; line-height: 1.2; }
+.reveal .flow-step .s { display: block; font-size: 0.66em; color: var(--ink-ink2); line-height: 1.3; }
+
+.reveal .flow-arrow {
+  align-self: center;
+  color: var(--ink-ink3);
+  font-size: 1.3em;
+  line-height: 1;
+  unicode-bidi: isolate;
+}
+.reveal .flow-arrow:has(.s) { display: flex; flex-direction: column; align-items: center; gap: 0.05em; }
+.reveal .flow-arrow .s { font-size: 0.45em; color: var(--ink-ink2); max-width: 8em; text-align: center; line-height: 1.25; }
+
+.reveal .flow.flow-col { flex-direction: column; align-items: stretch; }
+.reveal .flow.flow-col > .flow-step { flex: 0 0 auto; padding: 0.45em 0.8em; }
+.reveal .flow.flow-col > .flow-step .t { font-size: 0.82em; }
+.reveal .flow.flow-col > .flow-step .s { font-size: 0.62em; }
+.reveal .flow.flow-col > .flow-arrow { align-self: center; margin: 0; font-size: 1em; }
+
+/* Arrow glyphs are authored literally per language (→ in English, ← in
+   Arabic); `unicode-bidi: isolate` above keeps bidi from reordering them. */
+
+/* ---- Porting aliases (old SDAIA names) -------------------------------- */
+/* navy / teal / purple carried no meaning beyond variety, so in Ink they are
+   plain cards. Orange marked the takeaway and maps to .key above. */
+.reveal .card:is(.accent-navy, .accent-teal, .accent-purple, .accent-yellow) { border-inline-start: 0; }

@@ -1,0 +1,49 @@
+project:
+  type: website
+  render:
+  - "*.qmd"
+  - "!**/ignore/"
+  resources:
+    - google450c4506023d3b2b.html   # Search Console verification
+
+website:
+  title: "Naif Mersal"
+  description: "AI instructor at SDAIA Academy, interested in mathematics, optimization, efficient inference and Arabic-language AI."
+  image: logo.png
+  site-url: "https://naifmersal.github.io"
+  favicon: _ink/site/favicon.svg
+
+  navbar:
+    right:
+      - text: "Blog"
+        href: posts/index.qmd
+      - icon: github
+        href: https://github.com/naifmersal
+      - icon: linkedin
+        href: https://www.linkedin.com/in/naif-al-mehmadi
+      - icon: envelope
+        href: mailto:naifmersal@gmail.com
+    search: true
+
+  page-footer:
+    center: "© 2026 Naif Mersal"
+
+format:
+  html:
+    theme:
+      light: [_ink/site/ink-light.scss]
+      dark: [_ink/site/ink-dark.scss]
+
+    respect-user-color-scheme: true
+    toc: true
+    code-fold: true
+    css: styles.css
+    title-block-style: none
+metadata:
+  keywords: ["AI engineer", "efficient inference", "LLM serving", "Arabic NLP", "machine learning", "mathematics"]
+  lang: "en"
+  robots: "index, follow"
+
+
+
+

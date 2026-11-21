@@ -1,0 +1,95 @@
+<!--
+  Ink light / night mode for reveal.js decks.
+  GENERATED from brand/tokens.json by scripts/build_brand.py. Do not edit.
+  Added to every deck by ink.lua.
+
+  Which mode the deck starts in, first match wins:
+    1. ?theme=night or ?theme=light in the URL (use it to record a video)
+    2. the viewer's last choice, kept in localStorage
+    3. the system setting (prefers-color-scheme)
+
+  Toggle with the D key or the moon/sun button beside the menu.
+  In night mode every <img data-dark-src> shows its .dark twin; ink.lua adds
+  that attribute when assets/fig_x.dark.png exists next to fig_x.png.
+-->
+<script>
+(function () {
+  var KEY = "ink-theme";
+  var root = document.documentElement;
+  var media = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+
+  function stored() {
+    try { return localStorage.getItem(KEY); } catch (e) { return null; }
+  }
+  function fromUrl() {
+    var m = /[?&]theme=(night|dark|light)\b/.exec(location.search);
+    return m ? (m[1] === "light" ? "light" : "night") : null;
+  }
+  function initial() {
+    return fromUrl() || stored() || (media && media.matches ? "night" : "light");
+  }
+
+  // Quarto lazy-loads deck images: the file sits in data-src and reveal.js
+  // copies it into src when the slide comes near (and may do so again
+  // later). So swap data-src, which is what reveal reads, and src too when
+  // the image is already loaded. Swapping src alone gets overwritten.
+  function swapImages(mode) {
+    var imgs = document.querySelectorAll("img[data-dark-src]");
+    for (var i = 0; i < imgs.length; i++) {
+      var img = imgs[i];
+      if (!img.hasAttribute("data-light-src")) {
+        img.setAttribute("data-light-src", img.getAttribute("data-src") || img.getAttribute("src"));
+      }
+      var want = mode === "night" ? img.getAttribute("data-dark-src") : img.getAttribute("data-light-src");
+      if (img.hasAttribute("data-src") && img.getAttribute("data-src") !== want) img.setAttribute("data-src", want);
+      if (img.hasAttribute("src") && img.getAttribute("src") !== want) img.setAttribute("src", want);
+    }
+  }
+
+  var mode = initial();
+  function apply(m) {
+    mode = m;
+    root.classList.toggle("ink-night", m === "night");
+    swapImages(m);
+    var b = document.querySelector(".ink-mode-toggle");
+    if (b) {
+      b.setAttribute("aria-pressed", String(m === "night"));
+      b.setAttribute("title", m === "night" ? "Light mode (D)" : "Night mode (D)");
+    }
+  }
+  function toggle() {
+    var next = mode === "night" ? "light" : "night";
+    try { localStorage.setItem(KEY, next); } catch (e) {}
+    apply(next);
+  }
+
+  // Set the class before reveal lays out, so there is no light flash.
+  root.classList.toggle("ink-night", mode === "night");
+
+  function setup() {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "ink-mode-toggle";
+    b.setAttribute("aria-label", "Toggle light and night mode");
+    b.innerHTML =
+      '<svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>' +
+      '<svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>';
+    b.addEventListener("click", function (e) { e.stopPropagation(); toggle(); b.blur(); });
+    document.body.appendChild(b);
+    apply(mode);
+
+    if (window.Reveal && Reveal.addKeyBinding) {
+      Reveal.addKeyBinding({ keyCode: 68, key: "D", description: "Toggle light / night" }, toggle);
+    }
+    // Follow the system while the viewer has not chosen.
+    if (media && media.addEventListener) {
+      media.addEventListener("change", function (e) {
+        if (!stored() && !fromUrl()) apply(e.matches ? "night" : "light");
+      });
+    }
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", setup);
+  else setup();
+})();
+</script>

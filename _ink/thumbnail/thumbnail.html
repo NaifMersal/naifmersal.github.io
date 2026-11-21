@@ -1,0 +1,53 @@
+<!doctype html>
+<!--
+  Ink YouTube thumbnail, 1280x720.
+  GENERATED from brand/tokens.json by scripts/build_brand.py. Do not edit.
+  Render with: python scripts/render_thumbnail.py --title ... --out thumb.png
+  The renderer fills the THUMB_* placeholders below.
+-->
+<html lang="__LANG__" dir="__DIR__">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap">
+<style>
+  html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; }
+  body {
+    background: #16181D;
+    color: #FBFBFC;
+    font-family: "IBM Plex Sans", "IBM Plex Sans Arabic", system-ui, -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  html[lang="ar"] body { font-family: "IBM Plex Sans Arabic", "IBM Plex Sans", "Segoe UI", "Tahoma", sans-serif; }
+  .frame {
+    box-sizing: border-box; width: 1280px; height: 720px;
+    padding: 72px 84px 64px; display: grid; grid-template-rows: auto 1fr auto; gap: 24px;
+  }
+  .strip { display: flex; gap: 14px; font-family: "IBM Plex Mono", ui-monospace, "Cascadia Mono", "Consolas", monospace; font-size: 40px; direction: ltr; min-height: 60px; }
+  html[dir="rtl"] .strip { justify-content: flex-end; }
+  .strip span { padding: 4px 20px; border-radius: 7px; border: 3px solid #3A3F49; color: #8A909B; }
+  .strip .a { background: #FBFBFC; border-color: #FBFBFC; color: #16181D; }
+  .strip .x { text-decoration: line-through; border-style: dashed; }
+  .strip .n { background: #8AA4FF; border-color: #8AA4FF; color: #16181D; }
+  .copy { align-self: end; }
+  h1 { margin: 0; font-size: 112px; font-weight: 700; letter-spacing: -0.035em; line-height: 1; text-wrap: balance; }
+  html[lang="ar"] h1 { letter-spacing: 0; line-height: 1.3; font-size: 104px; }
+  p { margin: 22px 0 0; font-size: 40px; color: #8A909B; line-height: 1.3; }
+  /* YouTube covers the bottom-right corner with the duration badge, so the
+     footer sits at the physical left in both languages. */
+  .foot { display: flex; direction: ltr; justify-content: flex-start; align-items: center; gap: 32px; font-size: 30px; }
+  .mark { font-weight: 600; letter-spacing: -0.01em; }
+  .mark::after { content: ""; display: inline-block; width: 15px; height: 15px; margin-inline-start: 9px; border-radius: 2px; background: #8AA4FF; }
+  .series { font-family: "IBM Plex Mono", ui-monospace, "Cascadia Mono", "Consolas", monospace; font-size: 24px; color: #8A909B; letter-spacing: 0.04em; }
+</style>
+</head>
+<body>
+  <div class="frame">
+    <div class="strip">__STRIP__</div>
+    <div class="copy">
+      <h1>__TITLE__</h1>
+      <p>__SUBTITLE__</p>
+    </div>
+    <div class="foot"><span class="mark">__NAME__</span><span class="series">__SERIES__</span></div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,12 @@
+---
+title: "Blog"
+comments: false
+listing:
+  contents: "."
+  sort: "date desc"
+  type: default
+  categories: false
+  date-format: "MMMM D, YYYY"
+  feed: true
+---
+
