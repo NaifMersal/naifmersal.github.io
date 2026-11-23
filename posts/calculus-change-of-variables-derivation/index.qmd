@@ -218,7 +218,7 @@ $$
 
 ## **Rigorous error analysis for area approximation** {#sec-error-analysis}
 
-The exact signed area of $T(R)$ is the determinant of the edge vectors $\mathbf{a}$ and $\mathbf{b}$ (@sec-edge-vectors):  
+The determinant of the edge vectors $\mathbf{a}$ and $\mathbf{b}$ gives the exact signed area of the parallelogram they span. We use this parallelogram to approximate the image $T(R)$ locally (@sec-edge-vectors):  
 
 $$
 \det \begin{bmatrix} \mathbf{a} & \mathbf{b} \end{bmatrix} = \det \begin{bmatrix} \mathbf{T}_u \Delta u + \mathbf{r}_1 & \mathbf{T}_v \Delta v + \mathbf{r}_2 \end{bmatrix}.
@@ -239,11 +239,11 @@ $$
 E = \det \begin{bmatrix} \mathbf{r}_1 & \mathbf{T}_v \Delta v \end{bmatrix} + \det \begin{bmatrix} \mathbf{T}_u \Delta u & \mathbf{r}_2 \end{bmatrix} + \det \begin{bmatrix} \mathbf{r}_1 & \mathbf{r}_2 \end{bmatrix}.
 $$  
 
-Before we know Why $E \to 0$ relative to $\Delta u \Delta v$ remember that:
+Before analyzing why $E$ is negligible relative to $\Delta u \Delta v$, recall:
 $$
 \det[\mathbf p\ \mathbf q]=|\mathbf p||\mathbf q|\sin\theta
 $$
-Hence, 
+Therefore, the area of the parallelogram is at most the product of its side lengths:
 $$
 |\det[\mathbf p\ \mathbf q]| \le |\mathbf p||\mathbf q|
 $$
@@ -321,6 +321,10 @@ $$
 $$
 
 :::::
+
+:::{.callout-note}
+**Remark: from the parallelogram to $T(R)$.** As $\Delta u, \Delta v \to 0$, the parallelogram approximates the actual image $T(R)$ increasingly well. In particular, every point of $T(R)$ lies within $o(\max(\Delta u, \Delta v))$ of the parallelogram (by differentiability), and inflating a parallelogram by such a distance changes its area by only $o(\Delta u \Delta v)$. Their area difference is therefore $o(\Delta u \Delta v)$, so the same limiting area approximation holds for $T(R)$.
+:::
 
 
 ---
